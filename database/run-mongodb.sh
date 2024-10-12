@@ -4,9 +4,7 @@
 set -e
 
 # Open the firewall port for MongoDB
-echo "Configuring firewall to allow traffic on port 27017..."
-sudo ufw allow 27017/tcp
-sudo ufw reload
+
 
 # Variables
 IMAGE_NAME="my-mongo"

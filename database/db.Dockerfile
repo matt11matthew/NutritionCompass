@@ -3,7 +3,7 @@ FROM mongo:latest
 
 # Set MongoDB authentication variables
 ENV MONGO_INITDB_ROOT_USERNAME=admin \
-    MONGO_INITDB_ROOT_PASSWORD=password
+    MONGO_INITDB_ROOT_PASSWORD=NC_P2SSW0RD
 
 # Configure MongoDB to bind to all IPs for remote access
 RUN echo 'net:' > /etc/mongod.conf && \
