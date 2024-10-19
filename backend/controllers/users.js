@@ -9,7 +9,10 @@ const User = require("../models/User");
  * @access  Public
  */
 const getUsers = async (req, res, next) => {
-  // const users = await User.find();
+  const users = await User.find();
+  res
+    .status(200)
+    .json({ status: "success", data: users, message: "Users found." });
 };
 
 /**
@@ -36,7 +39,7 @@ const register = async (req, res, next) => {
     const newUser = new User(req.body);
 
     // make sure user email doesn't already exist
-    if (await User.findOne(req.body.email)) {
+    if (await User.findOne({ email: newUser.email })) {
       return res
         .status(400)
         .json({ status: "failed", data: [], message: "User already exists." });
@@ -95,4 +98,11 @@ const deleteUser = async (req, res, next) => {
   res.send("respond with a resource");
 };
 
-module.exports = { getUsers, getUserById, register, login, updateUser, deleteUser };
+module.exports = {
+  getUsers,
+  getUserById,
+  register,
+  login,
+  updateUser,
+  deleteUser,
+};
