@@ -1,0 +1,69 @@
+@startuml test
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor User as u
+actor Database as db
+
+rectangle "Nutrtion Compass Website" {
+    rectangle "User Management" {
+        (Register)
+        (Hash Password)
+        (Login)
+        (Check Validity)
+        (Credential Error)
+        (Logout)
+        (View Profile)
+        (Edit Profile)
+    }
+
+    rectangle "User Dashboard" {
+        (View Dashboard)
+        (View Food History)
+        (View Nutrition Summary)
+        "Food History"
+    }
+
+    rectangle "Food History" {
+        (Add Food Item)
+        (Barcode Scanner)
+        (Search Food Item)
+        (Edit Food Item)
+        (Existence Check)
+        (Delete Food Item)
+        (View Food Details)
+    }
+
+    u --> (Register)
+    (Register) ..> (Hash Password) : <<include>>
+    (Hash Password) --> db
+
+    u -> (Login)
+    (Login) ..> (Check Validity) : <<include>>
+    (Login) ..> (Credential Error) : <<extend>>
+    (Check Validity) <--> db
+    u --> (Logout)
+    u --> (View Profile)
+    (View Profile) --> (Edit Profile)
+    (Edit Profile) <--> db
+    u --> (View Dashboard)
+
+    (View Dashboard) --> (View Food History)
+    (View Dashboard) --> (View Nutrition Summary)
+    (View Food History) --> (Add Food Item)
+    (Add Food Item) ..> (Barcode Scanner) : <<include>>
+
+    (View Food History) --> (Search Food Item)
+    (View Food History) --> (Edit Food Item)
+    (View Food History) --> (Delete Food Item)
+    (View Food History) --> (View Food Details)
+    (Edit Food Item) ..> (Existence Check) : <<include>>
+    (Delete Food Item) ..> (Existence Check) : <<include>>
+    (Existence Check) <--> db
+    (View Food Details) <-- db
+    (Search Food Item) <-- db
+    (Barcode Scanner) <--> db
+}
+
+@enduml
