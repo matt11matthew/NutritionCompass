@@ -17,4 +17,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+// For use with personal testing db
+require("dotenv").config();
+const connectDB = require("./middleware/connectDB");
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    console.log("Connected to database...");
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+start();
+// End of personal testing db use
+
 module.exports = app;
