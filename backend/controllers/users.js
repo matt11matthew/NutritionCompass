@@ -77,13 +77,13 @@ const register = async (req, res, next) => {
  */
 const login = async (req, res, next) => {
   // extract email and password from req body
-  const { email, password } = req.body;
+  const { email } = req.body;
 
   // attempt to login
   try {
     // find user by email and force password to be returned with it
-    // while password select is false by default, need to add using + to select it
-    const user = await User.findOne({ email }).select("+password");
+    // password select:false, need to add using + to select it
+    const user = await User.findOne({ email }).select("+password").exec();
     if (!user) {
       // user not found
       return res
@@ -92,8 +92,9 @@ const login = async (req, res, next) => {
     }
 
     // user exists, compare password hashes
-    const validPassword = await compare(password, user.password);
-    if (!validPassword) {
+    const inputPassword = req.body.password;
+    const isValidPassword = await compare(inputPassword, user.password);
+    if (!isValidPassword) {
       // invalid password
       return res
         .status(401)
