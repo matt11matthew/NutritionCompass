@@ -17,6 +17,11 @@ const UserSchema = new Schema({
     unique: true,
     isEmail: true,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+    select: false,
+  },
   password: {
     type: String,
     select: false,
