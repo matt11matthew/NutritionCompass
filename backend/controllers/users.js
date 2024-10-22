@@ -1,8 +1,8 @@
 // Require the User model
 const User = require("../models/User");
 
-// Import bcrypt compare for password hashes
-const { compare } = require("bcrypt");
+// Imports
+const { compare } = require("bcrypt"); // compare hashes
 
 /**
  * @route   GET /users

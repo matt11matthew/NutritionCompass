@@ -19,7 +19,7 @@ app.use("/users", usersRouter);
 
 // For use with personal testing db
 require("dotenv").config();
-const connectDB = require("./middleware/connectDB");
+const connectDB = require("./connectDB");
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);

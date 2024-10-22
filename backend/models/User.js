@@ -47,7 +47,7 @@ UserSchema.pre("save", async function (next) {
   // hash password
   try {
     const salt = await genSalt(10);
-    this.password = await hash(this.password, salt); // set hashed password
+    this.password = await hash(this.password, salt); // set hashed password with added spice
     next();
   } catch (error) {
     next(error); // pass on error to next middleware
