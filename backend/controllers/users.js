@@ -1,6 +1,9 @@
 // Require the User model
 const User = require("../models/User");
 
+// Import bcrypt compare for password hashes
+const { compare } = require("bcrypt");
+
 /**
  * @route   GET /users
  * @desc    Get all users.
@@ -73,7 +76,43 @@ const register = async (req, res, next) => {
  * @access  Public
  */
 const login = async (req, res, next) => {
-  // TO DO
+  // extract email and password from req body
+  const { email, password } = req.body;
+
+  // attempt to login
+  try {
+    // find user by email and force password to be returned with it
+    // while password select is false by default, need to add using + to select it
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      // user not found
+      return res
+        .status(404)
+        .json({ status: "failed", data: [], message: "User not found." });
+    }
+
+    // user exists, compare password hashes
+    const validPassword = await compare(password, user.password);
+    if (!validPassword) {
+      // invalid password
+      return res
+        .status(401)
+        .json({ status: "failed", data: [], message: "Invalid password." });
+    }
+
+    // password is valid, log user in
+    const { password, ...userData } = user._doc; // remove password from returned
+    res.status(200).json({
+      status: "success",
+      data: [userData],
+      message: "User logged in.",
+    });
+  } catch (error) {
+    // error logging in
+    res.status(500).json({ status: "error", data: [], message: error.message });
+  }
+  // end the response
+  res.end();
 };
 
 /**
