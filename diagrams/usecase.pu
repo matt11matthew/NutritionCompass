@@ -1,69 +1,77 @@
-@startuml test
+@startuml usecase
 
 left to right direction
-skinparam packageStyle rectangle
+' skinparam packageStyle rectangle
 
 actor User as u
 actor Database as db
 
-rectangle "Nutrtion Compass Website" {
-    rectangle "User Management" {
-        (Register)
-        (Hash Password)
-        (Login)
-        (Check Validity)
-        (Credential Error)
-        (Logout)
-        (View Profile)
-        (Edit Profile)
+package "Nutrtion Compass Website" {
+    package "User Management" {
+        usecase (Register) as register
+        usecase (Hash Password) as hash
+        usecase (Login) as login
+        usecase (Check Validity) as check_validity
+        usecase (Credential Error) as credential_error
+        usecase (Verify Email) as verify_email
+        usecase (Logout) as logout
+        usecase (View Profile) as view_profile
+        usecase (Edit Profile) as edit_profile
     }
 
-    rectangle "User Dashboard" {
-        (View Dashboard)
-        (View Food History)
-        (View Nutrition Summary)
-        "Food History"
+    package "User Dashboard" {
+        usecase (View Dashboard) as view_dash
+        usecase (View Food History) as view_food_hist
+        usecase (Add New or Existing Food Item) as add_food_dash
+        usecase (Nutrition Calculations) as nutr_calc
     }
 
-    rectangle "Food History" {
-        (Add Food Item)
-        (Barcode Scanner)
-        (Search Food Item)
-        (Edit Food Item)
-        (Existence Check)
-        (Delete Food Item)
-        (View Food Details)
+    package "Food History" {
+        usecase (Add Food Item) as add_food
+        usecase (Barcode Scanner) as scan_bar
+        usecase (Search Food Item) as search_food
+        usecase (Edit Food Item) as edit_food
+        usecase (Existence Check) as exist_check
+        usecase (Delete Food Item) as delete_food
+        usecase (View Food Details) as view_food_item
     }
 
-    u --> (Register)
-    (Register) ..> (Hash Password) : <<include>>
-    (Hash Password) --> db
+    ' Registration
+    u --> register
+    register ..> hash : <<include>>
+    register ..> verify_email : <<include>>
+    hash --> db
 
-    u -> (Login)
-    (Login) ..> (Check Validity) : <<include>>
-    (Login) ..> (Credential Error) : <<extend>>
-    (Check Validity) <--> db
-    u --> (Logout)
-    u --> (View Profile)
-    (View Profile) --> (Edit Profile)
-    (Edit Profile) <--> db
-    u --> (View Dashboard)
+    ' User Management
+    u -> login
+    login ..> check_validity : <<include>>
+    login ..> credential_error : <<extend>>
+    check_validity <--> db
+    u --> logout
+    u --> view_profile
+    view_profile ..> edit_profile : <<include>>
+    edit_profile <--> db
+    u --> view_dash
+    verify_email <--> db
 
-    (View Dashboard) --> (View Food History)
-    (View Dashboard) --> (View Nutrition Summary)
-    (View Food History) --> (Add Food Item)
-    (Add Food Item) ..> (Barcode Scanner) : <<include>>
+    ' Dashboard
+    view_dash --> view_food_hist
+    view_dash --> nutr_calc
+    view_dash --> add_food_dash
 
-    (View Food History) --> (Search Food Item)
-    (View Food History) --> (Edit Food Item)
-    (View Food History) --> (Delete Food Item)
-    (View Food History) --> (View Food Details)
-    (Edit Food Item) ..> (Existence Check) : <<include>>
-    (Delete Food Item) ..> (Existence Check) : <<include>>
-    (Existence Check) <--> db
-    (View Food Details) <-- db
-    (Search Food Item) <-- db
-    (Barcode Scanner) <--> db
+    ' Food History
+    view_food_hist --> add_food
+    add_food ..> scan_bar : <<include>>
+    view_food_hist --> search_food
+    view_food_hist --> edit_food
+    view_food_hist --> delete_food
+    view_food_hist --> view_food_item
+    edit_food ..> exist_check : <<include>>
+    delete_food ..> exist_check : <<include>>
+    exist_check <--> db
+    view_food_item <-- db
+    search_food <-- db
+    scan_bar <--> db
 }
 
 @enduml
