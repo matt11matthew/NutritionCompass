@@ -1,8 +1,16 @@
-// Require the User model
+// Require the User and EmailToken models
 const User = require("../models/User");
+const EmailToken = require("../models/EmailToken");
 
 // Imports
 const { compare } = require("bcrypt"); // compare hashes
+const crypto = require("crypto"); // generate random token for email verification
+const sendEmail = require("../utils/sendEmail"); // email sending
+const {
+  sendVerificationEmail,
+  verifyEmail,
+  resendVerificationEmail,
+} = require("./verifyEmail");
 
 /**
  * @route   GET /users
@@ -49,9 +57,44 @@ const register = async (req, res, next) => {
     }
 
     // send out email verification
-    /**
-     * STUB
-     */
+    try {
+      const token = await crypto.randomBytes(16).toString("hex"); // generate random token, maybe should increase from 16?
+      const emailToken = await new EmailToken({ id: newUser.id, token: token }); // create email token
+
+      // save token to db
+      await emailToken.save(); // save email token to database
+
+      // send email
+      await sendEmail(
+        newUser.email, // email
+        "Verify your email", // subject
+        `Please click the following link to verify your email: http://${process.env.BASE_URL}/users/verifyEmail/${newUser.id}/${emailToken.token}` // text
+      );
+    } catch (error) {
+      console.error("Error sending verification email: ", error);
+      return res.status(500).json({
+        status: "error",
+        data: [],
+        message: "Error sending verification email.",
+      });
+    }
+
+    // verify email
+    // try {
+    //   const isVerified = await verifyEmail({ id: newUser.id });
+    //   if (!isVerified) {
+    //     return res
+    //       .status(401)
+    //       .json({ status: "failed", data: [], message: "Email not verified." });
+    //   }
+    // } catch (error) {
+    //   console.error("Error verifying email: ", error);
+    //   return res.status(500).json({
+    //     status: "error",
+    //     data: [],
+    //     message: "Error verifying email.",
+    //   });
+    // }
 
     // save user to database
     const savedUser = await newUser.save();

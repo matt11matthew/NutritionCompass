@@ -1,5 +1,7 @@
-const { Schema, model } = require("mongoose");
-const { genSalt, hash } = require("bcrypt");
+const { Schema, model } = require("mongoose"); // database handling
+const { genSalt, hash } = require("bcrypt"); // password hashing
+const passport = require("passport"); // authentication
+const { LocalStrategy } = require("passport-local"); // local auth. strategy
 
 // Create a new schema for a User
 const UserSchema = new Schema({
@@ -16,11 +18,11 @@ const UserSchema = new Schema({
     required: [true, "Users must have an email."],
     unique: true,
     isEmail: true,
-  },
-  verified: {
-    type: Boolean,
-    default: false,
-    select: false,
+    verified: {
+      type: Boolean,
+      default: false,
+      select: false, // don't return this field by default
+    },
   },
   password: {
     type: String,
@@ -44,7 +46,12 @@ const UserSchema = new Schema({
   },
 });
 
-// Hash password before saving to database
+/**
+ * PASSPORTJS LOCAL STRATEGY STUFF HERE
+ * and maybe in pre-save hook?
+ */
+
+// Hash password before creating model
 UserSchema.pre("save", async function (next) {
   // no need to re-hash password if it hasn't been modified
   if (!this.isModified("password")) return next();
@@ -53,9 +60,9 @@ UserSchema.pre("save", async function (next) {
   try {
     const salt = await genSalt(10);
     this.password = await hash(this.password, salt); // set hashed password with added spice
-    next();
+    return next();
   } catch (error) {
-    next(error); // pass on error to next middleware
+    return next(error); // pass on error to next middleware
   }
 });
 

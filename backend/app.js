@@ -18,11 +18,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/users/verifyEmail", verifyEmailRouter)
+app.use("/users/verifyEmail", verifyEmailRouter);
 
 // For use with personal testing db
 require("dotenv").config();
-const connectDB = require("./connectDB");
 const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
