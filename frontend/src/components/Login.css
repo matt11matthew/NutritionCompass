@@ -1,0 +1,16 @@
+/* login.css */
+.custom-textfield .MuiOutlinedInput-root {
+    background-color: #f0f8ff; /* Change this to your desired background color */
+}
+
+.custom-textfield .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+    border-color: #4682b4; /* Change this to your desired border color */
+}
+
+.custom-textfield .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #5f9ea0; /* Border color when hovered */
+}
+
+.custom-textfield .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #1e90ff; /* Border color when focused */
+}

@@ -14,6 +14,7 @@
     color: #e2d5c4 !important;
 }
 
+/*The hamburger icon has fixed color, probably need to get image in desired color*/
 .navbar-toggler{
-    border: #e2d5c4 solid !important;
+    border: #e2d5c4 solid 1px !important;
 }
