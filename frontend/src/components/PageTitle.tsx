@@ -3,19 +3,23 @@
 //before login acts as title bar.
 import {blue} from "@mui/material/colors";
 import './PageTitle.css';
-//import react from 'react';
-//import { Navbar, Nav, Container, Button, Card } from 'react-bootstrap';
+import react from 'react';
+import { Navbar, Nav, Container, Button, Card } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function PageTitle()
 {
+    /*
    return(
         <header className="TitleBar">
             <h1 id="title">Nutrition Compass</h1>
         </header>
     );
 
-/*
+     */
+
+
     return (
         <div>
             <Navbar bg="dark" variant="dark" expand="lg">
@@ -32,7 +36,11 @@ function PageTitle()
                 </Container>
             </Navbar>
 
-            <Container className="mt-5">
+
+        </div>
+    );
+/*
+*  <Container className="mt-5">
                 <Card>
                     <Card.Body>
                         <Card.Title>Welcome to MyApp</Card.Title>
@@ -43,10 +51,8 @@ function PageTitle()
                     </Card.Body>
                 </Card>
             </Container>
-        </div>
-    );
+* */
 
- */
 }
 
 export default PageTitle;
