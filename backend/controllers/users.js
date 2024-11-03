@@ -1,5 +1,6 @@
-// Require the User model
+// Require the User and EmailToken models
 const User = require("../models/User");
+const EmailToken = require("../models/EmailToken"); // may be unnecessary
 
 /**
  * @route   GET /users
@@ -34,35 +35,32 @@ const getUserById = async (req, res, next) => {
  * @access  Public
  */
 const register = async (req, res, next) => {
-  try {
-    // attempt to create new user
-    const newUser = new User(req.body);
-
-    // make sure user email doesn't already exist
-    if (await User.findOne({ email: newUser.email })) {
-      return res
-        .status(400)
-        .json({ status: "failed", data: [], message: "User already exists." });
+  // attempt to register new user
+  // register function included with passport-local-mongoose plugin
+  User.register(
+    new User({ email: req.body.email, username: req.body.email }),
+    req.body.password,
+    (err, user) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ status: "error", data: [], message: err.message });
+      } else {
+        req.login(user, (err) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ status: "error", data: [], message: err.message });
+          }
+          return res.status(201).json({
+            status: "success",
+            data: [user],
+            message: "User created.",
+          });
+        });
+      }
     }
-
-    // send out email verification
-    /**
-     * STUB
-     */
-
-    // save user to database
-    const savedUser = await newUser.save();
-    const { password, ...user } = savedUser._doc; // remove password from returned user object
-    res
-      .status(201)
-      .json({ status: "success", data: [user], message: "User created." });
-  } catch (error) {
-    // error creating user
-    res.status(500).json({ status: "error", data: [], message: error.message });
-  }
-
-  // end the response
-  res.end();
+  );
 };
 
 /**
@@ -73,7 +71,12 @@ const register = async (req, res, next) => {
  * @access  Public
  */
 const login = async (req, res, next) => {
-  // TO DO
+  // make sure email and password are provided
+  if (!req.body.email || !req.body.password) {
+    return res
+      .status(400)
+      .json({ status: "failed", data: [], message: "Email and password required." });
+  }
 };
 
 /**
