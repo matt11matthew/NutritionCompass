@@ -7,6 +7,8 @@ import react from 'react';
 import { Navbar, Nav, Container, Button, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+//Problem with default size of viewport
+//
 
 function PageTitle()
 {
@@ -22,15 +24,15 @@ function PageTitle()
 
     return (
         <div>
-            <Navbar bg="dark" variant="dark" expand="lg">
+            <Navbar className="nc-navbar"  expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">MyApp</Navbar.Brand>
+                    <Navbar.Brand href="#home">Nutrition Compass</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="#home">Home</Nav.Link>
-                            <Nav.Link href="#about">About</Nav.Link>
-                            <Nav.Link href="#contact">Contact</Nav.Link>
+                            <Nav.Link href="#home">Dashboard</Nav.Link>
+                            <Nav.Link href="#about">Food List</Nav.Link>
+                            <Nav.Link href="#contact">Account Details</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

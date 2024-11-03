@@ -1,13 +1,23 @@
-body {
-  background-color: #d7c5ad;
+html, body {
   margin: 0;
-  height: 100vh;
-  width: 100vh;
+  padding: 0;
+  min-height: 100%;
+  /* Your desired background color */
+  width: 100%;
+  /*background-color: #d7c5ad;*/
+  height: 100%; /* Ensure the height covers the full viewport */
+}
 
+#root {
+  min-height: 100%;
+  display: flex;
+  background-color: #d7c5ad;
+  flex-direction: column;
 }
 
 .App {
-  background-color: #d7c5ad;
-  height: 100%;
-  width: 100%;
+  flex: 1; /* Ensures the App component expands to fill available space */
+  display: flex;
+  flex-direction: column;
+  /*background-color: #d7c5ad;*/
 }
