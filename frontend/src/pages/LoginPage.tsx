@@ -1,5 +1,6 @@
-import PageTitle from './components/PageTitle.tsx';
-import Login from '../components/Login.tsx';
+import PageTitle from './PageTitle';
+import Login from './Login';
+
 const LoginPage = () =>
 {
     return(
