@@ -1,3 +1,5 @@
-.TitleBar {
+header {
     background-color: #0F3874;
+    color: #e2d5c4;
+    width: 100%
 }

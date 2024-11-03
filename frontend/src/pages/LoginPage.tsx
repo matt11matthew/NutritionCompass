@@ -4,10 +4,10 @@ import Login from '../components/Login';
 const LoginPage = () =>
 {
     return(
-        <body>
+        <div>
             <PageTitle />
             <Login />
-        </body>
+        </div>
     );
 };
 export default LoginPage;
