@@ -1,43 +1,19 @@
-import React, { useState } from "react";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-
-function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault(); // Prevent default form submission
-    // Add logic for form submission (e.g., API call) here
-}
-
-function LoginPaged() {
-    const [email, setEmail] = useState(''); // Initialize the state for email
-    const [password, setPassword] = useState(''); // Initialize the state for password
-
-    return (
-        <div className="App">
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    type="email"
-                    value={email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                />
-                <Button type="submit" variant="contained" color="primary">
-                    Login
-                </Button>
-            </form>
+function Login()
+{
+    function doLogin(event:any) : void
+    {
+        event.preventDefault();
+        alert('doIt()');
+    }
+    return(
+        <div id="loginDiv">
+            <span id="inner-title">PLEASE LOG IN</span><br />
+            <input type="text" id="loginName" placeholder="Username" /><br />
+            <input type="password" id="loginPassword" placeholder="Password" /><br />
+            <input type="submit" id="loginButton" className="buttons" value = "Do It"
+                   onClick={doLogin} />
+            <span id="loginResult"></span>
         </div>
     );
 }
-
-export default LoginPaged;
+export default Login;
