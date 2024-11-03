@@ -1,13 +1,13 @@
-import PageTitle from './PageTitle';
-import Login from './Login';
+import PageTitle from '../components/PageTitle';
+import Login from '../components/Login';
 
 const LoginPage = () =>
 {
     return(
-        <div>
+        <body>
             <PageTitle />
             <Login />
-        </div>
+        </body>
     );
 };
 export default LoginPage;
