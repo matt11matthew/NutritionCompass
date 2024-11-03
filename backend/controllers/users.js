@@ -1,16 +1,6 @@
 // Require the User and EmailToken models
 const User = require("../models/User");
-const EmailToken = require("../models/EmailToken");
-
-// Imports
-const { compare } = require("bcrypt"); // compare hashes
-const crypto = require("crypto"); // generate random token for email verification
-const sendEmail = require("../utils/sendEmail"); // email sending
-const {
-  sendVerificationEmail,
-  verifyEmail,
-  resendVerificationEmail,
-} = require("./verifyEmail");
+const EmailToken = require("../models/EmailToken"); // may be unnecessary
 
 /**
  * @route   GET /users
@@ -44,72 +34,6 @@ const getUserById = async (req, res, next) => {
  * @optional First name, last name, weight, height, activity level
  * @access  Public
  */
-// const register = async (req, res, next) => {
-//   try {
-//     // attempt to create new user
-//     const newUser = new User(req.body);
-
-//     // make sure user email doesn't already exist
-//     if (await User.findOne({ email: newUser.email })) {
-//       return res
-//         .status(400)
-//         .json({ status: "failed", data: [], message: "User already exists." });
-//     }
-
-//     // send out email verification
-//     try {
-//       const token = await crypto.randomBytes(16).toString("hex"); // generate random token, maybe should increase from 16?
-//       const emailToken = await new EmailToken({ id: newUser.id, token: token }); // create email token
-
-//       // save token to db
-//       await emailToken.save(); // save email token to database
-
-//       // send email
-//       await sendEmail(
-//         newUser.email, // email
-//         "Verify your email", // subject
-//         `Please click the following link to verify your email: http://${process.env.BASE_URL}/users/verifyEmail/${newUser.id}/${emailToken.token}` // text
-//       );
-//     } catch (error) {
-//       console.error("Error sending verification email: ", error);
-//       return res.status(500).json({
-//         status: "error",
-//         data: [],
-//         message: "Error sending verification email.",
-//       });
-//     }
-
-//     // verify email
-//     // try {
-//     //   const isVerified = await verifyEmail({ id: newUser.id });
-//     //   if (!isVerified) {
-//     //     return res
-//     //       .status(401)
-//     //       .json({ status: "failed", data: [], message: "Email not verified." });
-//     //   }
-//     // } catch (error) {
-//     //   console.error("Error verifying email: ", error);
-//     //   return res.status(500).json({
-//     //     status: "error",
-//     //     data: [],
-//     //     message: "Error verifying email.",
-//     //   });
-//     // }
-
-//     // save user to database
-//     const savedUser = await newUser.save();
-//     const { password, ...user } = savedUser._doc; // remove password from returned user object
-//     res
-//       .status(201)
-//       .json({ status: "success", data: [user], message: "User created." });
-//   } catch (error) {
-//     // error creating user
-//     res.status(500).json({ status: "error", data: [], message: error.message });
-//   }
-
-//   // end the response
-//   res.end();
-// };
 const register = async (req, res, next) => {
   // attempt to register new user
   // register function included with passport-local-mongoose plugin
@@ -146,46 +70,6 @@ const register = async (req, res, next) => {
  * @optional None
  * @access  Public
  */
-// const login = async (req, res, next) => {
-//   // extract email and password from req body
-//   const { email } = req.body;
-
-//   // attempt to login
-//   try {
-//     // find user by email and force password to be returned with it
-//     // password select:false, need to add using + to select it
-//     const user = await User.findOne({ email }).select("+password").exec();
-//     if (!user) {
-//       // user not found
-//       return res
-//         .status(404)
-//         .json({ status: "failed", data: [], message: "User not found." });
-//     }
-
-//     // user exists, compare password hashes
-//     const inputPassword = req.body.password;
-//     const isValidPassword = await compare(inputPassword, user.password);
-//     if (!isValidPassword) {
-//       // invalid password
-//       return res
-//         .status(401)
-//         .json({ status: "failed", data: [], message: "Invalid password." });
-//     }
-
-//     // password is valid, log user in
-//     const { password, ...userData } = user._doc; // remove password from returned
-//     res.status(200).json({
-//       status: "success",
-//       data: [userData],
-//       message: "User logged in.",
-//     });
-//   } catch (error) {
-//     // error logging in
-//     res.status(500).json({ status: "error", data: [], message: error.message });
-//   }
-//   // end the response
-//   res.end();
-// };
 const login = async (req, res, next) => {
   // make sure email and password are provided
   if (!req.body.email || !req.body.password) {
@@ -193,8 +77,6 @@ const login = async (req, res, next) => {
       .status(400)
       .json({ status: "failed", data: [], message: "Email and password required." });
   }
-
-  
 };
 
 /**

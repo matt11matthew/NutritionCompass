@@ -1,5 +1,4 @@
 const crypto = require("crypto"); // generate random token for email verification
-const sendEmail = require("../utils/sendEmail"); // email sending
 const EmailToken = require("../models/EmailToken"); // email token model
 
 // Send verification email

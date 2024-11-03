@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose"); // database handling
-const { genSalt, hash } = require("bcrypt"); // password hashing
 const passport = require("passport"); // authentication
 const { LocalStrategy } = require("passport-local"); // local auth. strategy
 const passportLocalMongoose = require("passport-local-mongoose"); // passport-local-mongoose plugin
@@ -47,27 +46,8 @@ const UserSchema = new Schema({
   },
 });
 
-/**
- * PASSPORTJS LOCAL STRATEGY STUFF HERE
- * and maybe in pre-save hook?
- */
 // Should handle hashing passwords now
 UserSchema.plugin(passportLocalMongoose); // insert passport-local-mongoose plugin to schema
-
-// // Hash password before creating model
-// UserSchema.pre("save", async function (next) {
-//   // no need to re-hash password if it hasn't been modified
-//   if (!this.isModified("password")) return next();
-
-//   // hash password
-//   try {
-//     const salt = await genSalt(10);
-//     this.password = await hash(this.password, salt); // set hashed password with added spice
-//     return next();
-//   } catch (error) {
-//     return next(error); // pass on error to next middleware
-//   }
-// });
 
 // Create a new model for a User and export it
 module.exports = model("User", UserSchema);

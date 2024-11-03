@@ -13,7 +13,7 @@ const LocalStrategy = require("passport-local").Strategy; // local strategy for 
 const passport = require("passport");
 passport.use(new LocalStrategy(User.authenticate())); // use passport-local-mongoose plugin
 passport.serializeUser(User.serializeUser()); // serialize user
-passport.deserializeUser(User.deserializeUser()); // deserialize user
+passport.deserializeUser(User.deserializeUser()); // deserialize user 
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
