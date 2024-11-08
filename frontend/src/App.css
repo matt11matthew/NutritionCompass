@@ -6,13 +6,24 @@ html, body {
   width: 100%;
   /*background-color: #d7c5ad;*/
   height: 100%; /* Ensure the height covers the full viewport */
-}
 
+}
+/*background-image: url('../../public/brand.png');*/
+/*background-size: cover;*/
+/*background-position: center;*/
+/*background-repeat: no-repeat;*/
 #root {
   min-height: 100%;
   display: flex;
-  background-color: #d7c5ad;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #d7c5ad;
+
+  background-image: url('../public/brand.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .App {

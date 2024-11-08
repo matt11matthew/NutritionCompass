@@ -1,16 +1,20 @@
 /* login.css */
-.custom-textfield .MuiOutlinedInput-root {
-    background-color: #f0f8ff; /* Change this to your desired background color */
+
+
+#loginDiv{
+    background-color: rgba(15, 56, 116, 0.8);
+    border: 10px solid rgba(15, 56, 116, 1);
+    width: 700px;
+    height: 480px;
 }
 
-.custom-textfield .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
-    border-color: #4682b4; /* Change this to your desired border color */
+#inner-title{
+    color: #E2D5C4;
+    font-size: 28px;
 }
 
-.custom-textfield .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #5f9ea0; /* Border color when hovered */
-}
-
-.custom-textfield .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: #1e90ff; /* Border color when focused */
+#loginButton{
+    color: #0F3874;
+    background-color: #E2D5C4;
+    font-weight: bold;
 }

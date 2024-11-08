@@ -1,12 +1,61 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Button, TextField, Typography, Box } from '@mui/material';
 import './Login.css';
-function Login() {
-    function doLogin(event: React.FormEvent) : void {
-        event.preventDefault();
-        alert('doIt()');
-    }
 
+ function Login() {
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [emailError, setEmailError] = useState<string>('');
+     const [loginResult, setLoginResult] = useState<string>(''); // State for displaying login feedback
+
+    // Regular expression for email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function doLogin(event: React.FormEvent) : void {
+        // event.preventDefault();\
+
+        // Perform final email validation before submission
+        if (!emailRegex.test(email)) {
+            setEmailError('Please enter a valid email address.');
+            return;
+        }
+        console.log(email);
+        console.log(password);
+
+        try {
+            // const response =  fetch('http://nc-api.matthewe.me/users/login', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ email, password })
+            // });
+
+            // console.log(response);
+            // if (response.ok) {
+            //     setLoginResult('Login successful!');
+            //     console.log('User data:', data);
+            //     // Optionally, redirect or save token
+            // } else {
+            //     setLoginResult(data.errors ? data.errors.map(error => error.msg).join(', ') : 'Login failed');
+            // }
+        } catch (error) {
+            console.error('Error logging in:', error);
+            setLoginResult('An error occurred. Please try again.');
+        }
+
+    }
+    function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        const inputEmail = event.target.value;
+        setEmail(inputEmail);
+
+        // Check if the email is valid
+        if (!emailRegex.test(inputEmail)) {
+            setEmailError('Please enter a valid email address.');
+        } else {
+            setEmailError('');
+        }
+    }
     return (
         <div>
             <Box
@@ -25,7 +74,7 @@ function Login() {
                 }}
             >
                 <Typography variant="h5" id="inner-title" gutterBottom>
-                    Login
+                    Sign In
                 </Typography>
                 <TextField
                     className="custom-textfield"
@@ -35,6 +84,10 @@ function Login() {
                     variant="outlined"
                     margin="normal"
                     fullWidth
+                    value={email}
+                    onChange={handleEmailChange}
+                    error={!!emailError}
+                    helperText={emailError}
                 />
                 <TextField
                     className="custom-textfield"
@@ -44,6 +97,8 @@ function Login() {
                     variant="outlined"
                     margin="normal"
                     fullWidth
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
                 <Button
 
@@ -53,9 +108,12 @@ function Login() {
                     onClick={doLogin}
                     sx={{ marginTop: 2 }}
                 >
-                    Do It
+                    Login
                 </Button>
-                <Typography id="loginResult" sx={{ marginTop: 2 }}></Typography>
+                {/* Display login result message */}
+                <Typography id="loginResult" sx={{ marginTop: 2 }}>
+                    {loginResult}
+                </Typography>
             </Box>
         </div>
     );

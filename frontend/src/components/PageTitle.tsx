@@ -3,12 +3,16 @@
 //before login acts as title bar.
 import {blue} from "@mui/material/colors";
 import './PageTitle.css';
-import react from 'react';
+import React from 'react';
 import { Navbar, Nav, Container, Button, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 //Problem with default size of viewport
 //
+
+interface PageTitleProps {
+    loggedin: boolean;
+}
 
 function PageTitle()
 {
@@ -21,28 +25,43 @@ function PageTitle()
 
      */
 
-
     return (
         <div>
             <Navbar className="nc-navbar"  expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">Nutrition Compass</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link href="#home">Dashboard</Nav.Link>
-                            <Nav.Link href="#about">Food List</Nav.Link>
-                            <Nav.Link href="#contact">Account Details</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
+                    <div className="d-flex w-100 justify-content-between align-items-center">
+                        <Navbar.Brand href="#home" className="d-flex align-items-center">
+                            <img
+                                src={"/CompassAndMonogram2.png"}
+                                alt="Logo"
+                                width="40" // Adjust the width and height as needed
+                                height="40"
+                                // className="d-inline-block align-top"
+                                className="navbar-img"
+                            />
+                        </Navbar.Brand>
+                            {/*{' '}*/}
+                        <span className="navbar-title">Nutrition Compass</span>
+
+                        <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="ms-auto">
+                                <Nav.Link href="#home">Dashboard</Nav.Link>
+                                <Nav.Link href="#foodList">Food List</Nav.Link>
+                                <Nav.Link href="#accountDetails">Account Details</Nav.Link>
+                                <Nav.Link href="#userProfile">User Profile</Nav.Link>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </div>
                 </Container>
             </Navbar>
 
 
         </div>
-    );
+);
 /*
-*  <Container className="mt-5">
+*
+    <Container className="mt-5">
                 <Card>
                     <Card.Body>
                         <Card.Title>Welcome to MyApp</Card.Title>
