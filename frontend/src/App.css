@@ -19,9 +19,9 @@ html, body {
   flex-direction: column;
 
   background-image: url('../public/brand.png');
-  background-size: cover;
+  background-size: auto;
   background-position: center;
-  /*background-repeat: no-repeat;*/
+  background-repeat: no-repeat;
 }
 
 .App {
