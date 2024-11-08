@@ -19,7 +19,7 @@ html, body {
   flex-direction: column;
 
   background-image: url('../public/brand.png');
-  background-size: auto;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
