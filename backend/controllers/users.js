@@ -2,6 +2,31 @@
 const User = require("../models/User");
 const EmailToken = require("../models/EmailToken"); // may be unnecessary
 
+// Authentication and email handling
+const passport = require("passport");
+const MagicLinkStrategy = require("passport-magic-link").Strategy;
+const sendgrid = require("@sendgrid/mail");
+
+// Configure Magic Link Strategy
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+passport.use(new MagicLinkStrategy({
+  secret: process.env.MAGIC_SECRET,
+  userFields: ["email"],
+  tokenField: "token",
+  verifyUserAfterToken: true
+}, function send(user, token) {
+  const link = process.env.BASE_URL + "/users/verifyEmail/" + token;
+  const message = {
+    to: user.email,
+    from: process.env.EMAIL,
+    subject: "Nutrition Compass: Please verify your email.",
+    text: "placeholder" + link
+  };
+  return sendgrid.send(message);
+}, function verify(user) {
+  // return promise on verification link pressed
+}))
+
 /**
  * @route   GET /users
  * @desc    Get all users.
@@ -77,6 +102,15 @@ const login = async (req, res, next) => {
       .status(400)
       .json({ status: "failed", data: [], message: "Email and password required." });
   }
+
+  // attempt to authenticate user
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ status: "error", data: [], message: err.message });
+    } else {
+
+    }
+  })
 };
 
 /**

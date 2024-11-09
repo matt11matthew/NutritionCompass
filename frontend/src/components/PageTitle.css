@@ -1,10 +1,35 @@
-.nc-navbar {
-    background-color: rgba(15, 56, 116, 1);
-    color: #e2d5c4;
-    border: 2px solid #0F3874;
+html, body {
+    margin: 0;
+    padding: 0;
     width: 100%;
-    height: 80px; /* Adjust this value to control the height */
+    height: 100%;
+    box-sizing: border-box; /* Include padding and border in width */
 }
+
+.nc-navbar {
+    background-color: #0F3874; /* Header background color */
+    width: 100%; /* Ensures full width */
+    margin: 0; /* Remove any margin */
+    padding: 0; /* Remove any padding */
+    border: none; /* No border */
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+.navbar-title {
+    color: #E2D5C4;
+    font-size: 2.5vw; /* Responsive font size */
+    font-weight: bold;
+    text-align: center; /* Center the text */
+    width: 100%; /* Full width */
+}
+
+@media (max-width: 768px) {
+    .navbar-title {
+        font-size: 5vw; /* Adjust font size for smaller screens */
+    }
+}
+
+
 
 /*.navbar-title{*/
 /*    text-align: center;*/
@@ -65,5 +90,3 @@
 .navbar-toggler {
     border: #e2d5c4 solid 1px !important;
 }
-
-

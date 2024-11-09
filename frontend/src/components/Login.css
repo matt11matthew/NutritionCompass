@@ -1,20 +1,8 @@
 /* login.css */
 
 
-#loginDiv{
-    background-color: rgba(15, 56, 116, 0.8);
-    border: 10px solid rgba(15, 56, 116, 1);
+#loginDiv {
     width: 700px;
     height: 480px;
 }
 
-#inner-title{
-    color: #E2D5C4;
-    font-size: 28px;
-}
-
-#loginButton{
-    color: #0F3874;
-    background-color: #E2D5C4;
-    font-weight: bold;
-}

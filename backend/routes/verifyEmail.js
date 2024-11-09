@@ -8,22 +8,22 @@ const {
 } = require("../controllers/verifyEmail");
 
 /**
- * @route   POST /users/verifyEmail/:id
+ * @route   POST /users/verifyEmail
  * @desc    Send verification email.
- * @requires User ID
+ * @requires None
  * @optional None
  * @access  Public
  */
 router.post("/", sendVerificationEmail);
 
 /**
- * @route   GET /users/verifyEmail/:id/:token
+ * @route   GET /users/verifyEmail/:token
  * @desc    Verify user account using token sent in email.
- * @requires User ID and token
+ * @requires Token
  * @optional None
  * @access  Public
  */
-router.get("/:id/:token", verifyEmail);
+router.get("/:token", verifyEmail);
 
 // Export router
 module.exports = router;

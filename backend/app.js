@@ -1,8 +1,8 @@
 // General imports and setup for the app
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const expressSession = require("express-session")
@@ -15,11 +15,11 @@ passport.use(new LocalStrategy(User.authenticate())); // use passport-local-mong
 passport.serializeUser(User.serializeUser()); // serialize user
 passport.deserializeUser(User.deserializeUser()); // deserialize user 
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var verifyEmailRouter = require("./routes/verifyEmail");
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const verifyEmailRouter = require("./routes/verifyEmail");
 
-var app = express();
+const app = express();
 app.use(expressSession({ secret: "secret", resave: false, saveUninitialized: false }));
 app.use(passport.initialize()); // initialize passport
 app.use(passport.session()); // use passport session

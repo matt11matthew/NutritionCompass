@@ -1,8 +1,8 @@
 const crypto = require("crypto"); // generate random token for email verification
-const EmailToken = require("../models/EmailToken"); // email token model
+// const EmailToken = require("../models/EmailToken"); // email token model
 
 // Send verification email
-// Email should contain a link to /users/verifyEmail/:id/:token
+// Email should contain a link to /users/verifyEmail/:token
 const sendVerificationEmail = async (req, res, next) => {
   const { id, email } = req; // get user id from request
   const token = await crypto.randomBytes(16).toString("hex"); // generate random token, maybe should increase from 16?

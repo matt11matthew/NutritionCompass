@@ -1,13 +1,18 @@
-import PageTitle from '../components/PageTitle';
+import React from 'react';
+import '../App.css';
 import Login from '../components/Login';
+import PageTitle from '../components/PageTitle';
 
-const LoginPage = () =>
-{
-    return(
+function LoginPage() {
+    return (
         <div>
             <PageTitle />
-            <Login />
+            <div className="page-container">
+                <h2>Test Change - Does This Show?</h2>
+                <Login/>
+            </div>
         </div>
     );
-};
+}
+
 export default LoginPage;

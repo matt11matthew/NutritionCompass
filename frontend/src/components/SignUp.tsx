@@ -92,7 +92,7 @@ import './Login.css';
                 }}
             >
                 <Typography variant="h5" className="inner-title" gutterBottom>
-                    Sign Ins
+                    Sign In
                 </Typography>
                 <TextField
                     className="custom-textfield"
@@ -133,19 +133,6 @@ import './Login.css';
                 <Typography id="loginResult" sx={{ marginTop: 2 }}>
                     {loginResult}
                 </Typography>
-
-                <Button
-                    id="signUpButton"
-                    variant="outlined"
-                    color="secondary"
-                    sx={{ marginTop: 2 }}
-                    onClick={() => {
-                        // Redirect to the sign-up page or handle sign-up logic
-                        console.log('Redirect to sign-up page');
-                    }}
-                >
-                    Sign Up
-                </Button>
             </Box>
         </div>
     );
