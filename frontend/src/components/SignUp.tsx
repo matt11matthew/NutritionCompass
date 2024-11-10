@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { Button, TextField, Typography, Box } from '@mui/material';
 import './Login.css';
 
- function Login() {
+ function SignUp() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [emailError, setEmailError] = useState<string>('');
@@ -92,7 +92,7 @@ import './Login.css';
                 }}
             >
                 <Typography variant="h5" className="inner-title" gutterBottom>
-                    Sign In
+                    Sign Up
                 </Typography>
                 <TextField
                     className="custom-textfield"
@@ -133,9 +133,23 @@ import './Login.css';
                 <Typography id="loginResult" sx={{ marginTop: 2 }}>
                     {loginResult}
                 </Typography>
+
+                <Button
+                    id="signUpButton"
+                    className="ncButton"
+                    variant="contained"
+                    color="primary"
+                    sx={{ marginTop: 2 }}
+                    onClick={() => {
+                        // Redirect to the sign-up page or handle sign-up logic
+                        console.log('Redirect to sign-up page');
+                    }}
+                >
+                    Sign Up
+                </Button>
             </Box>
         </div>
     );
 }
 
-export default Login;
+export default SignUp;

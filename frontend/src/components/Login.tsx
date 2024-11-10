@@ -92,7 +92,7 @@ import './Login.css';
                 }}
             >
                 <Typography variant="h5" className="inner-title" gutterBottom>
-                    Sign Ins
+                    Sign In
                 </Typography>
                 <TextField
                     className="custom-textfield"
