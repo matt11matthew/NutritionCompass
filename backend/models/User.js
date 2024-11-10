@@ -18,11 +18,11 @@ const UserSchema = new Schema({
     required: [true, "Users must have an email."],
     unique: true,
     isEmail: true,
-    verified: {
-      type: Boolean,
-      default: false,
-      select: false, // don't return this field by default
-    },
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+    select: false, // don't return this field by default
   },
   // password: { // handled by passport-local-mongoose
   //   type: String,
