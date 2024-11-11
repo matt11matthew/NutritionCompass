@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const expressSession = require("express-session")
+const expressSession = require("express-session");
 
 // Passport stuff
 const User = require("./models/User");
@@ -13,14 +13,21 @@ const LocalStrategy = require("passport-local").Strategy; // local strategy for 
 const passport = require("passport");
 passport.use(new LocalStrategy(User.authenticate())); // use passport-local-mongoose plugin
 passport.serializeUser(User.serializeUser()); // serialize user
-passport.deserializeUser(User.deserializeUser()); // deserialize user 
+passport.deserializeUser(User.deserializeUser()); // deserialize user
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const verifyEmailRouter = require("./routes/verifyEmail");
+const authRouter = require("./routes/auth");
 
 const app = express();
-app.use(expressSession({ secret: "secret", resave: false, saveUninitialized: false }));
+require("dotenv").config(); // load environment variables
+app.use(
+  expressSession({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 app.use(passport.initialize()); // initialize passport
 app.use(passport.session()); // use passport session
 
@@ -32,10 +39,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/users/verifyEmail", verifyEmailRouter);
+app.use("/auth", authRouter);
 
 // For use with personal testing db
-require("dotenv").config();
 const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
