@@ -44,7 +44,12 @@ passport.use(
           reject("User not found.");
         } else {
           unverifiedUser.verified = true;
-          await unverifiedUser.save();
+          try {
+            await unverifiedUser.save();
+          } catch (err) {
+            reject(err);
+          }
+          // return verified user
           resolve(unverifiedUser);
         }
       });
@@ -67,6 +72,8 @@ const register = async (req, res, next) => {
   // attempt to register new user
   // register function included with passport-local-mongoose plugin
   User.register(
+    /////////////// STILL NEED TO SAVE OPTIONAL FIELDS TO USER ///////////////
+    /////////////// NEED TO CHECK IF USER EXISTS BEFORE REGISTERING TO SEND BACK RESPONSE 400 ///////////////
     new User({ email: req.body.email, username: req.body.email }),
     req.body.password,
     (err, user) => {

@@ -1,0 +1,226 @@
+openapi: "3.0.3"
+info:
+  title: Nutrition Compass API
+  version: "1.0"
+  description: API documentation for Nutrition Compass website
+  contact:
+    email: de465952@ucf.edu
+servers:
+  - url: http://localhost:3000
+    description: Test server
+  - url: http://nc.matthewe.me/
+    description: Production server
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Registers and adds new user to the database with a false verified field. An email will be sent with a link to verify their account.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User successfully added to database
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request. User already exists.
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/verify?token={token}:
+    get:
+      summary: Verify a user
+      description: Verifies a user by token sent to their email
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/resend:
+    post:
+      summary: Resend verification email
+      description: Resends the verification email to the user
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/login:
+    post:
+      summary: Login a user
+      description: Logs in a user
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/logout:
+    post:
+      summary: Logout a user
+      description: Logs out a user
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/forgot:
+    post:
+      summary: Forgot password
+      description: Sends an email to the user with a link to reset their password
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /users:
+    get:
+      summary: Get all users
+      description: Returns a list of all users currently registered
+      responses:
+        "200":
+          description: Users found
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      description: Returns a user by their ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/User/properties/_id"
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+    put:
+      summary: Update a user by ID
+      description: Updates a user by their ID
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+    delete:
+      summary: Delete a user by ID
+      description: Deletes a user by their ID
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: "uuid"
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        verified:
+          type: boolean
+          default: false
+        firstName:
+          type: string
+        lastName:
+          type: string
+        weight:
+          type: number
+        height:
+          type: number
+        activityLevel:
+          type: string
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+        sex:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+      required:
+        - email
+        - password
+    Food:
+      type: object
+      properties:
+        _id:
+          type: integer
+        name:
+          type: string
+        calories:
+          type: integer
+        protein:
+          type: integer
+        carbs:
+          type: integer
+        fat:
+          type: integer
+      required:
+        - name
+        - calories
+        - protein
+        - carbs
+        - fat
