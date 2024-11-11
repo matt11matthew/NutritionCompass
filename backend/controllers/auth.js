@@ -22,6 +22,8 @@ passport.use(
     },
     function send(user, token) {
       // send email with verification link
+      ////////////////////////////// TO DO //////////////////////////////
+      ///////////////////////////// ADJUST LINK FOR PRODUCTION SERVER /////////////////////////////
       const port = process.env.PORT || 3000;
       const link =
         process.env.BASE_URL + ":" + port + "/auth/verify?token=" + token;
@@ -72,6 +74,7 @@ const register = async (req, res, next) => {
   // attempt to register new user
   // register function included with passport-local-mongoose plugin
   User.register(
+    /////////////// TO DO ///////////////
     /////////////// STILL NEED TO SAVE OPTIONAL FIELDS TO USER ///////////////
     /////////////// NEED TO CHECK IF USER EXISTS BEFORE REGISTERING TO SEND BACK RESPONSE 400 ///////////////
     new User({ email: req.body.email, username: req.body.email }),
