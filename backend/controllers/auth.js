@@ -102,6 +102,10 @@ const register = async (req, res, next) => {
   );
 };
 
+const resend = async (req, res, next) => {
+  // NOT YET IMPLEMENTED
+};
+
 /**
  * @route   POST /auth/login
  * @desc    Login a user.
@@ -153,8 +157,19 @@ const logout = async (req, res, next) => {
   req.logout(); // logout user
 };
 
+const reset = async (req, res, next) => {
+  // NOT YET IMPLEMENTED
+};
+
+const forgot = async (req, res, next) => {
+  // NOT YET IMPLEMENTED
+};
+
 module.exports = {
   register,
   login,
+  resend,
   logout,
+  reset,
+  forgot,
 };
