@@ -51,3 +51,4 @@ UserSchema.plugin(passportLocalMongoose); // insert passport-local-mongoose plug
 
 // Create a new model for a User and export it
 module.exports = model("User", UserSchema);
+// hey this is ahmed, im worried that the naming chosen here is going to conflict in other files

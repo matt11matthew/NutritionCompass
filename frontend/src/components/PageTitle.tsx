@@ -6,9 +6,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function PageTitle() {
     return (
         <Navbar className="nc-navbar">
-            <span className="navbar-title">
-                Nutrition Compass
-            </span>
+            <div className="navbar-content">
+                <img
+                    src="/CompassAndMonogram2.png"
+                    alt="Logo"
+                    width="40"
+                    height="40"
+                    className="navbar-img"
+                />
+                <span className="navbar-title">
+                    Nutrition Compass
+                </span>
+            </div>
         </Navbar>
     );
 }

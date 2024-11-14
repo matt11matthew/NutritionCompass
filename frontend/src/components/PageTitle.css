@@ -9,18 +9,29 @@ html, body {
 .nc-navbar {
     background-color: #0F3874; /* Header background color */
     width: 100%; /* Ensures full width */
-    margin: 0; /* Remove any margin */
-    padding: 0; /* Remove any padding */
+    padding: 1vh 2vw; /* Remove any padding */
     border: none; /* No border */
-    box-sizing: border-box; /* Include padding and border in width */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;/* Include padding and border in width */
 }
+
+.navbar-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 
 .navbar-title {
     color: #E2D5C4;
     font-size: 2.5vw; /* Responsive font size */
     font-weight: bold;
     text-align: center; /* Center the text */
-    width: 100%; /* Full width */
+}
+
+.navbar-img{
+    border-radius: 100px;
 }
 
 @media (max-width: 768px) {
@@ -29,51 +40,10 @@ html, body {
     }
 }
 
-
-
-/*.navbar-title{*/
-/*    text-align: center;*/
-/*    horiz-align: center;*/
-/*}*/
-
-.page-title-background {
-    /*background-image: url('../../public/brand.png');*/
-    /*background-size: cover;*/
-    /*background-position: center;*/
-    /*background-repeat: no-repeat;*/
-    /*min-height: p;*/
-}
-
-.navbar-img{
-    border-radius: 5px;
-}
 .custom-textfield .MuiOutlinedInput-root {
     background-color:#D9D9D9; /* Change this to your desired background color */
     border-radius: 15px;
 }
-
-.custom-textfield .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
-    border-color: #4682b4; /* Change this to your desired border color */
-}
-
-.custom-textfield .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #5f9ea0; /* Border color when hovered */
-}
-
-.custom-textfield .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: #1e90ff; /* Border color when focused */
-}
-.nc-navbar .navbar-brand .navbar-title{
-    display: flex;
-    width: 100%;
-    horiz-align: center;
-    align-items: center;
-    text-align: center;
-    font-weight: bold;
-    font-size: 28px;
-}
-
-
 
 .navbar-brand {
     color: #e2d5c4 !important;
@@ -81,10 +51,6 @@ html, body {
 
 .nav-link {
     color: #e2d5c4 !important;
-}
-
-.me-auto{
-    margin-left: auto;
 }
 
 .navbar-toggler {

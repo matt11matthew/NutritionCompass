@@ -1,79 +1,77 @@
 import React, {useState} from 'react';
 import { Button, TextField, Typography, Box } from '@mui/material';
-import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
  function SignUp() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [emailError, setEmailError] = useState<string>('');
-     const [loginResult, setLoginResult] = useState<string>(''); // State for displaying login feedback
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
 
-    // Regular expression for email validation
+    const [emailError, setEmailError] = useState<string>('');
+    const [passwordError, setPasswordError] = useState<string>('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState<string>('');
+    const [signupResult, setSignUpResult] = useState<string>('');
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+        setEmailError('');
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+        setEmailError('');
+    };
+
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConfirmPassword(e.target.value);
+        setConfirmPasswordError('');
+    };
+
+    //init nav:
+     const navigate = useNavigate();
+    //email validation:
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    function doLogin(event: React.FormEvent) : void {
-        // event.preventDefault();\
-
-        // Perform final email validation before submission
-        if (!emailRegex.test(email)) {
-            setEmailError('Please enter a valid email address.');
-            return;
-        }
-        console.log(email);
-        console.log(password);
-
-        try {
-            const response =  fetch('http://nc-api.matthewe.me/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
-
-            console.log(response);
-            // if (response.ok) {
-            //     setLoginResult('Login successful!');
-            //     console.log('User data:', data);
-            //     // Optionally, redirect or save token
-            // } else {
-            //     setLoginResult(data.errors ? data.errors.map(error => error.msg).join(', ') : 'Login failed');
-            // }
-        } catch (error) {
-            console.error('Error logging in:', error);
-            setLoginResult('An error occurred. Please try again.');
-        }
-
-    }
-    function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const inputEmail = event.target.value;
-        setEmail(inputEmail);
-
-        // Check if the email is valid
-        if (!emailRegex.test(inputEmail)) {
-            setEmailError('Please enter a valid email address.');
-        } else {
+    const onSubmit = () => {
+        let valid = true;
+        //check email:
+        if(!email || !emailRegex.test(email)) {
+            setEmailError("Invalid Email");
+            valid = false
+        }else{
             setEmailError('');
         }
+
+        //check password matching:
+        if(password != confirmPassword){
+            setConfirmPasswordError("Passwords do not match");
+            valid = false;
+        }else{
+            setConfirmPasswordError('');
+        }
+
+        //call API if all is correct:
+        if(valid){
+            let Creation = true;
+            //API call stuff, if it in invalid call, make Creation = false;
+            //naviagtion to /accountInfo
+            try{
+                //api stuff:
+                // response will be the call
+                const response = true;
+
+                //temp nav to info page.
+                if(response) navigate('/accountInfo');
+                // if(response.ok){
+                //     navigate('/accountInfo');
+                // }
+            }catch(error){
+                console.error("signUp Error");
+            }
+        }
     }
-    /*
-    .boxDiv{
-  background-color: rgba(15, 56, 116, 0.8);
-  border: 10px solid rgba(15, 56, 116, 1);
-}
-
-.ncButton {
-  color: #0F3874;
-  background-color: #E2D5C4;
-  font-weight: bold;
-}
-.inner-title{
-  color: #E2D5C4;
-  font-size: 28px;
-}
 
 
-     */
     return (
         <div>
             <Box
@@ -96,8 +94,8 @@ import './Login.css';
                 </Typography>
                 <TextField
                     className="custom-textfield"
-                    id="loginName"
-                    label="Email Address"
+                    id="email"
+                    placeholder="Email Address"
                     type="email"
                     variant="outlined"
                     margin="normal"
@@ -109,43 +107,39 @@ import './Login.css';
                 />
                 <TextField
                     className="custom-textfield"
-                    id="loginPassword"
-                    label="Password"
+                    id="signUpPassword"
+                    placeholder="Password"
                     type="password"
                     variant="outlined"
                     margin="normal"
                     fullWidth
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
+                    error = {!!passwordError}
+                    helperText = {passwordError}
+                />
+                <TextField
+                    className="custom-textfield"
+                    id="confirmPassword"
+                    placeholder="Confirm Password"
+                    type="password"
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    error = {!!confirmPasswordError}
+                    helperText = {confirmPasswordError}
                 />
                 <Button
-
-                    id="loginButton"
+                    id="CreateAccount"
                     className="ncButton"
                     variant="contained"
                     color="primary"
-                    onClick={doLogin}
+                    onClick={onSubmit}
                     sx={{ marginTop: 2 }}
                 >
-                    Login
-                </Button>
-                {/* Display login result message */}
-                <Typography id="loginResult" sx={{ marginTop: 2 }}>
-                    {loginResult}
-                </Typography>
-
-                <Button
-                    id="signUpButton"
-                    className="ncButton"
-                    variant="contained"
-                    color="primary"
-                    sx={{ marginTop: 2 }}
-                    onClick={() => {
-                        // Redirect to the sign-up page or handle sign-up logic
-                        console.log('Redirect to sign-up page');
-                    }}
-                >
-                    Sign Up
+                    Create Account
                 </Button>
             </Box>
         </div>
