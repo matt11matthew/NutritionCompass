@@ -58,15 +58,17 @@ import { useNavigate } from 'react-router-dom';
             try{
                 //api stuff:
                 // response will be the call
-                const response = true;
+                const response =  fetch('http://nc-api.matthewe.me/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-                //temp nav to info page.
-                if(response) navigate('/accountInfo');
-                // if(response.ok){
-                //     navigate('/accountInfo');
-                // }
+                console.log(response);
             }catch(error){
-                console.error("signUp Error");
+                setSignUpResult('Failed to create account.');
             }
         }
     }

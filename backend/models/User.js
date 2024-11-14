@@ -1,13 +1,11 @@
 const { Schema, model } = require("mongoose"); // database handling
-const passport = require("passport"); // authentication
-const { LocalStrategy } = require("passport-local"); // local auth. strategy
-const passportLocalMongoose = require("passport-local-mongoose"); // passport-local-mongoose plugin
+const {genSalt, hash} = require("bcrypt");
 
 // Create a new schema for a User
 const UserSchema = new Schema({
   firstName: {
     type: String,
-    maxLength: [50, "First name cannot be more than 50 characters."],
+    maxLength: [50, "First name cannot be more than 50 characters."]
   },
   lastName: {
     type: String,
@@ -19,22 +17,23 @@ const UserSchema = new Schema({
     unique: true,
     isEmail: true,
   },
-  verified: {
-    type: Boolean,
-    default: false,
-    select: false, // don't return this field by default
+  password: {
+    type: String,
+    select: false, // do not allow selection by default
+    required: [true, "Users must have a password."],
+    minLength: [8, "Password must be at least 8 characters long."],
   },
-  // password: { // handled by passport-local-mongoose
-  //   type: String,
-  //   select: false,
-  //   required: [true, "Users must have a password."],
-  //   minLength: [8, "Password must be at least 8 characters long."],
-  // },
   weight: {
     type: Number,
+    default: 0,
   },
   height: {
     type: Number,
+    default: 0,
+  },
+  age: {
+    type: Number,
+    default: 0,
   },
   activityLevel: {
     type: String,
@@ -46,8 +45,17 @@ const UserSchema = new Schema({
   },
 });
 
-// Should handle hashing passwords now
-UserSchema.plugin(passportLocalMongoose); // insert passport-local-mongoose plugin to schema
+UserSchema.pre("save", async function (next) {
+  // no need to re-hash password if it hasn't been modified
+  if (!this.isModified("password")) return next();
+  try {
+    const salt = await genSalt(10);
+    this.password = await hash(this.password, salt); // set hashed password with added spice
+    return next();
+  } catch (error) {
+    return next(error); // pass on error to next middleware
+  }
+});
 
 // Create a new model for a User and export it
 module.exports = model("User", UserSchema);

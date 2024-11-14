@@ -1,67 +1,8 @@
 // Import the User models
 const User = require("../models/User");
 
-// Import authentication and email handling
-const passport = require("passport");
-const MagicLinkStrategy = require("passport-magic-link").Strategy;
-const sendgrid = require("@sendgrid/mail");
-
-/***/ /***/ /***/ /***/ /***/ /* Passport */ /***/ /***/ /***/ /***/ /***/
-
-// Configure SendGrid and Magic Link Strategy
-require("dotenv").config(); // load environment variables
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
-passport.use(
-  new MagicLinkStrategy(
-    {
-      // configs
-      secret: process.env.MAGIC_SECRET,
-      userFields: ["email"],
-      tokenField: "token",
-      verifyUserAfterToken: true,
-    },
-    function send(user, token) {
-      // send email with verification link
-      ////////////////////////////// TO DO //////////////////////////////
-      ///////////////////////////// ADJUST LINK FOR PRODUCTION SERVER /////////////////////////////
-      const port = process.env.PORT || 3000;
-      const link =
-        process.env.BASE_URL + ":" + port + "/auth/verify?token=" + token;
-      const message = {
-        to: user.email,
-        from: process.env.EMAIL,
-        subject: "Nutrition Compass: Please verify your email.",
-        text: "placeholder " + link,
-      };
-      return sendgrid.send(message);
-    },
-    function verify(user) {
-      // return promise on verification link pressed
-      // find user by email and set email.verified to true
-      return new Promise(async (resolve, reject) => {
-        const unverifiedUser = await User.findOne({ email: user.email }).select(
-          "+verified"
-        );
-        if (!unverifiedUser) {
-          reject("User not found.");
-        } else {
-          unverifiedUser.verified = true;
-          try {
-            await unverifiedUser.save();
-          } catch (err) {
-            reject(err);
-          }
-          // return verified user
-          resolve(unverifiedUser);
-        }
-      });
-    }
-  )
-);
-
-// Passport serialize and deserialize user
-
-/***/ /***/ /***/ /***/ /***/ /* Controller functions */ /***/ /***/ /***/ /***/ /***/
+// Import bcrypt to compare passwords
+const {compare} = require("bcrypt")
 
 /**
  * @route   POST /auth/register
@@ -72,38 +13,34 @@ passport.use(
  */
 const register = async (req, res, next) => {
   // attempt to register new user
-  // register function included with passport-local-mongoose plugin
-  User.register(
-    /////////////// TO DO ///////////////
-    /////////////// STILL NEED TO SAVE OPTIONAL FIELDS TO USER ///////////////
-    /////////////// NEED TO CHECK IF USER EXISTS BEFORE REGISTERING TO SEND BACK RESPONSE 400 ///////////////
-    new User({ email: req.body.email, username: req.body.email }),
-    req.body.password,
-    (err, user) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ status: "error", data: [], message: err.message });
-      } else {
-        req.login(user, (err) => {
-          if (err) {
-            return res
-              .status(500)
-              .json({ status: "error", data: [], message: err.message });
-          }
-          return res.status(201).json({
-            status: "success",
-            data: [user],
-            message: "User created.",
-          });
-        });
-      }
-    }
-  );
-};
+  // make sure they provide email and password
+  if (!email || !password) return res.status(400).json({status: "failed", data: [], message: "Invalid email or password."});
+  const {email, password} = req.body;
+  // ensure user does not already exist
+  try {
+    const exists = await User.findOne({email: email});
+    if (exists) return res.status(400).json({status: "failed", data: [], message: "User already exists."});
+  } catch (error) {
+    return res.status(500).json({status: "error", data: [], message: error.message});
+  }
 
-const resend = async (req, res, next) => {
-  // NOT YET IMPLEMENTED
+  /* // ahmed's implementation from app.js, this should also check if it exists and bring back an error if it cant use the input but i havent tested yet tho
+  const{email, password} = req.body;
+  User.findOne({email:email}, (err,user)=>{
+      if(user){
+          res.status(400).json({status:"failed", data: [], message:"This account already exists"});
+      } else {
+          const user = new User({email, password})
+          user.save(error=>{
+              if(error){
+                  res.status(400).json({status:"failed", data: [], message: error.message)};
+              } else {
+                  res.status(200).json({status:"success", data: [], message:"New account has been successfully created"});
+              }
+          })
+      }
+  })
+  */
 };
 
 /**
@@ -123,53 +60,49 @@ const login = async (req, res, next) => {
     });
   }
 
-  // attempt to authenticate user
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ status: "error", data: [], message: err.message });
-    } else {
-      // if user is authenticated
+  /* // ahmed's implementation from app.js, also not tested
+  const {email, password} = req.body;
+
+  // i can think of a few reasons why having these vars would help later but it might not be worth it honestly might remove them later
+  var id = -1;
+  // var email = '';
+  var fn = ''; //firstname
+  var ln = ''; //lastname
+
+  //await mongoose.connect(process.env.MONGO_URI); // this should be called earlier (?)
+  User.findOne({email:email}, (error, user) => {
       if (user) {
-        req.login(user, (err) => {
-          if (err) {
-            return res
-              .status(500)
-              .json({ status: "error", data: [], message: err.message });
+          if (user.password === password) {
+              res.status(200).json({status: "success", data: [], message: "Successfully logged in", user: user});
+          } else {
+              res.status(400).json({status: "failed", data: [], message: "The password is incorrect"});
+              error = 'The password is incorrect';
           }
-          return res.status(200).json({
-            status: "success",
-            data: [user],
-            message: `User ${user.email} authenticated and logged in.`,
-          });
-        });
       } else {
-        return res
-          .status(401)
-          .json({ status: "failed", data: [], message: info.message });
+          res.status(400).json({status: "failed", data: [], message: "This username does not exist"});
+          error = 'This username does not exist';
       }
-    }
-  });
+  })
+  res.status(200).json({ id:id, firstName:fn, lastName:ln, email:email, error:error});
+  */
 };
 
 const logout = async (req, res, next) => {
-  req.logout(); // logout user
+  // force jwt to expire
 };
 
 const reset = async (req, res, next) => {
-  // NOT YET IMPLEMENTED
+  // ensure user has proper jwt
+
+  // require old password be input(someone may not remember?)
+
+  // reset password in database (should already be rehashed by pre-save hook)
 };
 
-const forgot = async (req, res, next) => {
-  // NOT YET IMPLEMENTED
-};
 
 module.exports = {
   register,
   login,
-  resend,
   logout,
   reset,
-  forgot,
 };
