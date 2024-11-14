@@ -50,7 +50,7 @@ app.post('/api/login', (req, res) =>
     const {email, password} = req.body;
 
     var id = -1;
-    var email = '';
+    // var email = '';
     var fn = ''; //firstname
     var ln = ''; //lastname
 

@@ -50,18 +50,6 @@ router.get(
 router.post("/resend", (req, res) => {}); // not implemented yet
 
 /**
- * @route   POST /auth/reset
- * @desc    Reset a user's password.
- */
-router.post("/reset", (req, res) => {}); // not implemented yet
-
-/**
- * @route   POST /auth/forgot
- * @desc    Send email for forgotten password.
- */
-router.post("/forgot", (req, res) => {}); // not implemented yet
-
-/**
  * @route   POST /auth/login
  * @desc    Login a user.
  * @requires Email and password
@@ -84,5 +72,11 @@ router.post(
  * @access  Public
  */
 router.post("/logout", logout); // not implemented yet
+
+/**
+ * @route   POST /auth/forgot
+ * @desc    Send email for forgotten password.
+ */
+router.post("/forgot", (req, res) => {}); // not implemented yet
 
 module.exports = router;

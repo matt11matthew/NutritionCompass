@@ -1,0 +1,400 @@
+openapi: "3.0.3"
+info:
+  title: Nutrition Compass API
+  version: "1.0"
+  description: API documentation for Nutrition Compass website
+  contact:
+    email: de465952@ucf.edu
+servers:
+  - url: http://localhost:3000
+    description: Test server
+  - url: http://nc.matthewe.me/
+    description: Production server
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Registers and adds new user to the database. User is returned in the response.
+      tags:
+        - Authentication
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User successfully added to database
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request. User already exists.
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/login:
+    post:
+      summary: Login a user
+      description: Logs in a user
+      tags:
+        - Authentication
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/User/properties/email"
+                - $ref: "#/components/schemas/User/properties/password"
+              not:
+                anyOf:
+                  - $ref: "#/components/schemas/User/properties/verified"
+                  - $ref: "#/components/schemas/User/properties/firstName"
+                  - $ref: "#/components/schemas/User/properties/lastName"
+                  - $ref: "#/components/schemas/User/properties/weight"
+                  - $ref: "#/components/schemas/User/properties/height"
+                  - $ref: "#/components/schemas/User/properties/activityLevel"
+                  - $ref: "#/components/schemas/User/properties/sex"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/logout:
+    post:
+      summary: Logout a user
+      description: Logs out a user
+      tags:
+        - Authentication
+      operationId: logoutUser
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /auth/reset:
+    post:
+      summary: Reset password
+      description: Resets a user's password. Requires user to be logged in and sends an email to the user with a link to reset their password
+      tags:
+        - Authentication
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/User/properties/email"
+                - $ref: "#/components/schemas/User/properties/password"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      description: Returns a list of all users currently registered
+      responses:
+        "200":
+          description: Users found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        description: ID of the user to return
+        required: true
+        schema:
+          $ref: "#/components/schemas/ID"
+    get:
+      tags:
+        - Users
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request. User does not exist.
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+    put:
+      tags:
+        - Users
+      summary: Update a user by ID
+      description: Updates a user by their ID and returns the updated user. User must be logged in.
+      responses:
+        "200":
+          description: Requested fields updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+    delete:
+      tags:
+        - Users
+      summary: Delete a user by ID
+      description: Deletes a user by their ID and returns deleted user. User must be logged in to delete their account.
+      responses:
+        "200":
+          description: User account successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /users/search:
+    post:
+      tags:
+        - Users
+      summary: Search for a user by query
+      description: Searches for a user by request body query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchQuery"
+      responses:
+        "200":
+          description: User(s) found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/User"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /foods/{userId}:
+    parameters:
+      - in: path
+        name: userId
+        description: ID of the user
+        required: true
+        schema:
+          $ref: "#/components/schemas/ID"
+    get:
+      tags:
+        - Foods
+      summary: Get all foods for a user by ID
+      description: Returns a list of all foods for a user by ID
+      responses:
+        "200":
+          description: Foods found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Food"
+        "400":
+          description: Bad request. Food not found
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+    post:
+      tags:
+        - Foods
+      summary: Add a food for a user by ID
+      description: Adds a food for a user by ID and returns the added food
+      responses:
+        "201":
+          description: Food successfully added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Food"
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /foods/{userId}/{foodId}:
+    parameters:
+      - name: userId
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          $ref: "#/components/schemas/User/properties/_id"
+      - name: foodId
+        in: path
+        description: ID of the food
+        required: true
+        schema:
+          $ref: "#/components/schemas/Food/properties/_id"
+    get:
+      tags:
+        - Foods
+      summary: Get a food by ID
+      description: Returns a food by food ID and user ID
+      responses:
+        "200":
+          description: Food found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Food"
+        "400":
+          description: Bad request. Food not found
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    ID:
+      type: string
+      properties:
+        _id:
+          type: string
+          format: "uuid"
+          readOnly: true
+    User:
+      type: object
+      properties:
+        _id:
+          $ref: "#/components/schemas/ID/properties/_id"
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        verified:
+          type: boolean
+          default: false
+        firstName:
+          type: string
+        lastName:
+          type: string
+        weight:
+          type: number
+        height:
+          type: number
+        activityLevel:
+          type: string
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+        sex:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+      required:
+        - email
+        - password
+    Food:
+      type: object
+      properties:
+        _id:
+          $ref: "#/components/schemas/ID/properties/_id"
+        name:
+          type: string
+        calories:
+          type: number
+        protein:
+          type: number
+        carbs:
+          type: number
+        fat:
+          type: number
+      required:
+        - name
+        - calories
+        - protein
+        - carbs
+        - fat
+    FoodHistory:
+      type: array
+      items: 
+        $ref: "#/components/schemas/Food"
+      properties:
+        _id:
+          $ref: "#/components/schemas/ID"
+        foodId:
+          type: string
+          format: "uuid"
+        userId:
+          type: string
+          format: "uuid"
+        date:
+          type: string
+          format: date
+      required:
+        - userId
+        - date
+    SearchQuery:
+      type: object
+      properties:
+        query:
+          type: string
+        type:
+          type: string
+          oneOf:
+            - $ref: "#/components/schemas/User/properties"
+            - $ref: "#/components/schemas/Food/properties"
+      required:
+        - query
+        - type

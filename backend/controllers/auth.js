@@ -22,6 +22,8 @@ passport.use(
     },
     function send(user, token) {
       // send email with verification link
+      ////////////////////////////// TO DO //////////////////////////////
+      ///////////////////////////// ADJUST LINK FOR PRODUCTION SERVER /////////////////////////////
       const port = process.env.PORT || 3000;
       const link =
         process.env.BASE_URL + ":" + port + "/auth/verify?token=" + token;
@@ -44,7 +46,12 @@ passport.use(
           reject("User not found.");
         } else {
           unverifiedUser.verified = true;
-          await unverifiedUser.save();
+          try {
+            await unverifiedUser.save();
+          } catch (err) {
+            reject(err);
+          }
+          // return verified user
           resolve(unverifiedUser);
         }
       });
@@ -67,6 +74,9 @@ const register = async (req, res, next) => {
   // attempt to register new user
   // register function included with passport-local-mongoose plugin
   User.register(
+    /////////////// TO DO ///////////////
+    /////////////// STILL NEED TO SAVE OPTIONAL FIELDS TO USER ///////////////
+    /////////////// NEED TO CHECK IF USER EXISTS BEFORE REGISTERING TO SEND BACK RESPONSE 400 ///////////////
     new User({ email: req.body.email, username: req.body.email }),
     req.body.password,
     (err, user) => {
@@ -90,6 +100,10 @@ const register = async (req, res, next) => {
       }
     }
   );
+};
+
+const resend = async (req, res, next) => {
+  // NOT YET IMPLEMENTED
 };
 
 /**
@@ -143,8 +157,19 @@ const logout = async (req, res, next) => {
   req.logout(); // logout user
 };
 
+const reset = async (req, res, next) => {
+  // NOT YET IMPLEMENTED
+};
+
+const forgot = async (req, res, next) => {
+  // NOT YET IMPLEMENTED
+};
+
 module.exports = {
   register,
   login,
+  resend,
   logout,
+  reset,
+  forgot,
 };

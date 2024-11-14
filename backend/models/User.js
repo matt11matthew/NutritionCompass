@@ -38,7 +38,7 @@ const UserSchema = new Schema({
   },
   activityLevel: {
     type: String,
-    enum: ["LOW", "MED", "HIGH"],
+    enum: ["LOW", "MEDIUM", "HIGH"],
   },
   sex: {
     type: String,
