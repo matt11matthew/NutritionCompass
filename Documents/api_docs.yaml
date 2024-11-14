@@ -14,7 +14,7 @@ paths:
   /auth/register:
     post:
       summary: Register a new user
-      description: Registers and adds new user to the database with a false verified field. An email will be sent with a link to verify their account. User is returned in the response.
+      description: Registers and adds new user to the database. User is returned in the response.
       tags:
         - Authentication
       operationId: registerUser
@@ -33,51 +33,6 @@ paths:
                 $ref: "#/components/schemas/User"
         "400":
           description: Bad request. User already exists.
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-  /auth/verify:
-    get:
-      summary: Verify a user
-      description: Verifies a user by token sent to their email
-      tags:
-        - Authentication
-      operationId: verifyUser
-      parameters:
-        - name: token
-          in: query
-          description: Token sent to user's email
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: User successfully verified
-        "400":
-          description: Bad request
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-  /auth/resend:
-    post:
-      summary: Resend verification email
-      description: Resends the verification email to the user. Old token is invalidated and a new one is sent.
-      tags:
-        - Authentication
-      operationId: resendEmail
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-      responses:
-        "200":
-          description: Successfully resent verification email
-        "400":
-          description: Bad request. User does not exist or is already verified.
         "404":
           description: Not found
         "500":
@@ -146,31 +101,6 @@ paths:
               allOf:
                 - $ref: "#/components/schemas/User/properties/email"
                 - $ref: "#/components/schemas/User/properties/password"
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad request
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-  /auth/forgot:
-    post:
-      summary: Forgot password
-      description: Sends an email to the user with a link to reset their password
-      tags:
-        - Authentication
-      operationId: forgotPassword
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: "#/components/schemas/User"
-              required:
-                  - email
       responses:
         "200":
           description: OK
