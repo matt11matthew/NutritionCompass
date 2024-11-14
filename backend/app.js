@@ -58,7 +58,7 @@ app.post('/api/login', (req, res) =>
     User.findOne({email:email}, (err, user) => {
         if (user) {
             if (user.password === password) {
-                res.send({message: "Successfully logged in", user: user}
+                res.send({message: "Successfully logged in", user: user});
             } else {
                 res.send({message: "The password is incorrect"});
                 error = 'The password is incorrect';
