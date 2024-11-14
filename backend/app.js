@@ -35,8 +35,8 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 
-// attempting to set up endpoints
-mongoose.connect(process.env.MONGO_URI);
+// common practice is to put this before functions but im not sure
+//mongoose.connect(process.env.MONGO_URI);
 
 
 // For use with personal testing db
