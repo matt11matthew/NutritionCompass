@@ -9,29 +9,38 @@ html, body {
 .nc-navbar {
     background-color: #0F3874; /* Header background color */
     width: 100%; /* Ensures full width */
-    padding: 1vh 2vw; /* Remove any padding */
-    border: none; /* No border */
+    padding: 1vh 2vw; /* Adjust padding as needed */
+    border: none;
     box-sizing: border-box;
     display: flex;
-    justify-content: center;/* Include padding and border in width */
+    align-items: center; /* Center items vertically */
 }
 
 .navbar-content {
     display: flex;
     align-items: center;
-    gap: 10px;
+    /*gap: 10px;*/
+    width: 100%;
+    position: relative;
 }
 
 
 .navbar-title {
     color: #E2D5C4;
-    font-size: 2.5vw; /* Responsive font size */
+    font-size: 2.5vw;
     font-weight: bold;
-    text-align: center; /* Center the text */
+    text-align: center;
+    position: absolute; /* Position the title absolutely within navbar-content */
+    left: 50%;
+    transform: translateX(-50%); /* Center the text */
 }
 
 .navbar-img{
     border-radius: 100px;
+    width: 75px; /* Set a fixed width */
+    height: 75px;
+    margin-left: 10px;/* Set a fixed height to create a square */
+    margin-right: auto; /* Pushes the image to the far left */
 }
 
 @media (max-width: 768px) {
