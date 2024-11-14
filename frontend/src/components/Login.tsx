@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import { Button, TextField, Typography, Box } from '@mui/material';
+import { useNavigate} from 'react-router-dom'
 import './Login.css';
 
  function Login() {
+     const navigate = useNavigate();
+
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [emailError, setEmailError] = useState<string>('');
@@ -75,7 +78,7 @@ import './Login.css';
 
      */
     return (
-        <div>
+        <div style={{width: "100vw", height: "90vh", display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
             <Box
                 className="boxDiv"
                 sx={{
@@ -83,21 +86,22 @@ import './Login.css';
                     flexDirection: 'column',
                     alignItems: 'center',
                     padding: 3,
-                    border: '1px solid #ddd',
+                    border: '8px solid #0F3874',
                     borderRadius: 2,
                     boxShadow: 1,
-                    maxWidth: 400,
-                    margin: 'auto',
-                    marginTop: 5
+                    maxWidth: 500,
+                    /*margin: 'auto',*/
+                    marginTop: 5,
+                    backgroundColor: 'rgba(15, 56, 116, 0.85)'
                 }}
             >
-                <Typography variant="h5" className="inner-title" gutterBottom>
+                <Typography variant="h4" className="inner-title" gutterBottom>
                     Sign In
                 </Typography>
                 <TextField
                     className="custom-textfield"
                     id="loginName"
-                    label="Email Address"
+                    placeholder="Email Address"
                     type="email"
                     variant="outlined"
                     margin="normal"
@@ -110,7 +114,7 @@ import './Login.css';
                 <TextField
                     className="custom-textfield"
                     id="loginPassword"
-                    label="Password"
+                    placeholder="Password"
                     type="password"
                     variant="outlined"
                     margin="normal"
@@ -123,7 +127,7 @@ import './Login.css';
                     id="loginButton"
                     className="ncButton"
                     variant="contained"
-                    color="primary"
+                    /*color="primary"*/
                     onClick={doLogin}
                     sx={{ marginTop: 2 }}
                 >
@@ -136,12 +140,12 @@ import './Login.css';
 
                 <Button
                     id="signUpButton"
-                    variant="outlined"
+                    className="ncButton"
+                    variant="contained"
                     color="secondary"
                     sx={{ marginTop: 2 }}
                     onClick={() => {
-                        // Redirect to the sign-up page or handle sign-up logic
-                        console.log('Redirect to sign-up page');
+                        navigate('/signup')
                     }}
                 >
                     Sign Up
