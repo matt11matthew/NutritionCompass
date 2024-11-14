@@ -10,8 +10,6 @@ function PageTitle() {
                 <img
                     src="/CompassAndMonogram2.png"
                     alt="Logo"
-                    width="40"
-                    height="40"
                     className="navbar-img"
                 />
                 <span className="navbar-title">
