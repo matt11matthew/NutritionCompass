@@ -5,7 +5,7 @@ import PageTitle from '../components/PageTitle';
 
 function UserProfilePage() {
     return (
-        <div id="divTest" style={{width: "100vw", height: "100vh"}}>
+        <div>
             <PageTitle />
             <div >
                 <Login/>

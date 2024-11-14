@@ -86,7 +86,7 @@ import './Login.css';
                     flexDirection: 'column',
                     alignItems: 'center',
                     padding: 3,
-                    border: '10px solid #0F3874',
+                    border: '8px solid #0F3874',
                     borderRadius: 2,
                     boxShadow: 1,
                     maxWidth: 500,
