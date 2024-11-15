@@ -4,37 +4,39 @@
     align-items: center;
     justify-content: center;
     padding: 1vw;
-    max-width: 60vw; /* Narrower width */
+    width: 50vw;
+    max-width: 70vw;
     margin: auto;
     background-color: #0F3874;
     color: #E2D5C4;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 2vw; /* Add margin to push it down from the header */
 }
 
 .user-profile-title {
-    font-size: 2vw;
+    font-size: 1.8vw;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 1vw;
+    margin-bottom: 0.8vw;
 }
 
 .user-profile-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5vw; /* Reduce gap for tighter layout */
-    width: 90%; /* Slight padding from edges */
+    gap: 1vw;
+    width: 100%;
 }
 
 .user-profile-form label {
-    font-size: 1vw;
+    font-size: 0.9vw;
     color: #E2D5C4;
-    margin-bottom: 0.25vw; /* Tighter spacing */
+    margin-bottom: 0.3vw;
 }
 
 .user-profile-input, .user-profile-select {
     font-size: 0.9vw;
-    padding: 0.3vw 0.5vw; /* Smaller padding */
+    padding: 0.5vw;
     border-radius: 5px;
     border: none;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -46,16 +48,10 @@
     margin-top: 1vw;
 }
 
-.activity-level-container p {
-    font-size: 1vw;
-    color: #E2D5C4;
-    margin: 0.25vw 0;
-}
-
 .save-button {
     grid-column: span 2;
     padding: 0.6vw;
-    font-size: 1vw;
+    font-size: 0.9vw;
     font-weight: bold;
     background-color: #E2D5C4;
     color: #0F3874;
@@ -63,5 +59,5 @@
     border-radius: 5px;
     cursor: pointer;
     margin-top: 1vw;
-    max-width: 200px; /* Center button within the form */
+    max-width: 150px;
 }

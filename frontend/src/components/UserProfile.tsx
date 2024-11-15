@@ -7,13 +7,16 @@ function UserProfile() {
             <h2 className="user-profile-title">User Profile</h2>
             <form className="user-profile-form">
                 <label>First Name</label>
-                <input type="text" className="user-profile-input" placeholder="First Name" />
+                <input type="text" className="user-profile-input" placeholder="First Name"/>
 
                 <label>Last Name</label>
-                <input type="text" className="user-profile-input" placeholder="Last Name" />
+                <input type="text" className="user-profile-input" placeholder="Last Name"/>
+
+                <label>Age (lbs)</label>
+                <input type="text" className="user-profile-input" placeholder="Age"/>
 
                 <label>Weight (lbs)</label>
-                <input type="text" className="user-profile-input" placeholder="Weight (lbs)" />
+                <input type="text" className="user-profile-input" placeholder="Weight (lbs)"/>
 
                 <label>Sex</label>
                 <select className="user-profile-select">
@@ -23,7 +26,7 @@ function UserProfile() {
                 </select>
 
                 <label>Height (feet inches)</label>
-                <div style={{ display: 'flex', gap: '0.5vw' }}>
+                <div style={{display: 'flex', gap: '0.5vw'}}>
                     <select className="user-profile-select">
                         <option value="">Ft</option>
                         <option value="4">4</option>
@@ -47,19 +50,12 @@ function UserProfile() {
                     </select>
                 </div>
 
-                <div className="activity-level-container">
-                    <p>Select Activity Level</p>
-                    <p>Low: &lt;7,500 steps/day</p>
-                    <p>Moderate: 7,500–9,999 steps/day</p>
-                    <p>High: &gt;10,000 steps/day</p>
-                </div>
-
                 <label>Activity Level</label>
                 <select className="user-profile-select">
                     <option value="">Activity Level</option>
-                    <option value="low">Low</option>
-                    <option value="moderate">Moderate</option>
-                    <option value="high">High</option>
+                    <option value="low">Low: &lt;7,500 steps/day</option>
+                    <option value="moderate">Moderate: 7,500–9,999 steps/day</option>
+                    <option value="high">High: &gt;10,000 steps/day</option>
                 </select>
 
                 <label>Weight Goal</label>
