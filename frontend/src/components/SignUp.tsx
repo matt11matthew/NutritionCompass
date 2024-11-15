@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { Button, TextField, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import './SignUp.css';
 
  function SignUp() {
     const [email, setEmail] = useState<string>('');
@@ -75,7 +76,7 @@ import { useNavigate } from 'react-router-dom';
 
 
     return (
-        <div>
+        <div style={{width: "100vw", height: "90vh", display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
             <Box
                 className="boxDiv"
                 sx={{
@@ -83,15 +84,16 @@ import { useNavigate } from 'react-router-dom';
                     flexDirection: 'column',
                     alignItems: 'center',
                     padding: 3,
-                    border: '1px solid #ddd',
+                    border: '8px solid #0F3874',
                     borderRadius: 2,
                     boxShadow: 1,
                     maxWidth: 400,
-                    margin: 'auto',
-                    marginTop: 5
+                    /* margin: 'auto',*/
+                    /*marginTop: 5*/
+                    backgroundColor: 'rgba(15, 56, 116, 0.85)'
                 }}
             >
-                <Typography variant="h5" className="inner-title" gutterBottom>
+                <Typography variant="h4" className="inner-title" gutterBottom>
                     Sign Up
                 </Typography>
                 <TextField
@@ -142,6 +144,19 @@ import { useNavigate } from 'react-router-dom';
                     sx={{ marginTop: 2 }}
                 >
                     Create Account
+                </Button>
+
+                <Button
+                    id="backButton"
+                    className="ncButton"
+                    variant="contained"
+                    color="secondary"
+                    sx={{ marginTop: 2 }}
+                    onClick={() => {
+                        navigate('/login')
+                    }}
+                >
+                    Back To Login
                 </Button>
             </Box>
         </div>

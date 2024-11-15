@@ -62,10 +62,9 @@ const login = async (req, res, next) => {
 
   /* // ahmed's implementation from app.js, also not tested
   const {email, password} = req.body;
-
   // i can think of a few reasons why having these vars would help later but it might not be worth it honestly might remove them later
   var id = -1;
-  // var email = '';
+  var email = '';
   var fn = ''; //firstname
   var ln = ''; //lastname
 
@@ -74,6 +73,8 @@ const login = async (req, res, next) => {
       if (user) {
           if (user.password === password) {
               res.status(200).json({status: "success", data: [], message: "Successfully logged in", user: user});
+              id = user._id;
+              email = user.email;
           } else {
               res.status(400).json({status: "failed", data: [], message: "The password is incorrect"});
               error = 'The password is incorrect';
@@ -83,17 +84,37 @@ const login = async (req, res, next) => {
           error = 'This username does not exist';
       }
   })
-  res.status(200).json({ id:id, firstName:fn, lastName:ln, email:email, error:error});
+  //res.status(200).json({ id:id, firstName:fn, lastName:ln, email:email, error:error});
   */
 };
 
 const logout = async (req, res, next) => {
   // force jwt to expire
+  // tried implementing, let me know how goofy it is - ahmed
+  try{
+    res.cookie("token", "none", {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true
+    });
+    res.status(200).json({status: "success", data: [], message: "User logged out"});
+  } catch (error){
+    res.status(400).json({status: "failed", data: [], message: error.message});
+  }
 };
 
 const reset = async (req, res, next) => {
-  // ensure user has proper jwt
+  const authToken = req.headers.authorization;
 
+  // ensure user has proper jwt
+  if(!authToken){
+    return res.status(401).json({status: "failed", data: [], message: "no token available"});
+  } else {
+    const token = authToken.split(" ")[1];
+    const isVerified = verifyUserToken(token);
+    if(!isVerified){
+      
+    }
+  }
   // require old password be input(someone may not remember?)
 
   // reset password in database (should already be rehashed by pre-save hook)

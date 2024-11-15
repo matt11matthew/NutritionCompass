@@ -89,9 +89,9 @@ import './Login.css';
                     border: '8px solid #0F3874',
                     borderRadius: 2,
                     boxShadow: 1,
-                    maxWidth: 500,
+                    maxWidth: 400,
                     /*margin: 'auto',*/
-                    marginTop: 5,
+                    /*marginTop: 5,*/
                     backgroundColor: 'rgba(15, 56, 116, 0.85)'
                 }}
             >
@@ -122,6 +122,9 @@ import './Login.css';
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                <Typography>
+                    <a href='./login'>Forgot Password?</a>
+                </Typography>
                 <Button
 
                     id="loginButton"

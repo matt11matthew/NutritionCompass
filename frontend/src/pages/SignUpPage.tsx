@@ -4,8 +4,7 @@ import SignUp from "../components/SignUp";
 const SignUpPage = () =>
 {
     return(
-        <div>
-            <PageTitle />
+        <div style={{width: "100vw", height: "100vh"}}>
             <SignUp />
         </div>
     );

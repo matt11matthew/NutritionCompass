@@ -6,7 +6,6 @@ import PageTitle from '../components/PageTitle';
 function LoginPage() {
     return (
         <div id="divTest" style={{width: "100vw", height: "100vh"}}>
-            <PageTitle />
             <div className="page-container" style={{width: "100vw", height: "90vh"}}>
                 <Login/>
             </div>

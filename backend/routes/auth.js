@@ -43,6 +43,12 @@ router.post(
  * @access  Public
  */
 router.post("/logout", logout); // not implemented yet
+/* req.logout(function(err) {
+     if (err) {
+       return next(err);
+     }
+     res.redirect('/');
+   }); */
 
 
 module.exports = router;

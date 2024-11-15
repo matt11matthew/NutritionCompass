@@ -31,3 +31,11 @@
 #signUpButton:hover {
     background-color: #092247;
 }
+
+a {
+    color: lightblue !important;
+}
+
+a:visited{
+    color: #ab96d6 !important;
+}
