@@ -1,0 +1,29 @@
+#food-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#food-list-title{
+    color: #0F3874;
+    font-size: 32px;
+    padding : 10px;
+    font-weight: bold;
+}
+
+#food-search-form label{
+    color: #0F3874;
+    font-size: 20px;
+    padding: 5px;
+}
+
+#food-search-form input{
+    color: #0F3874;
+    background-color: #D9D9D9;
+    width: 50vw;
+    height: 30px;
+    border: #0F3874 1px solid;
+    border-radius: 15px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
