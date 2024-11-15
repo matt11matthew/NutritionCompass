@@ -112,7 +112,7 @@ const reset = async (req, res, next) => {
     const token = authToken.split(" ")[1];
     const isVerified = verifyUserToken(token);
     if(!isVerified){
-      
+      return res.status(401).json({status: "failed", data: [], message: "incorrect or no token available"});
     }
   }
   // require old password be input(someone may not remember?)
