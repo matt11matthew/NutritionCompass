@@ -5,7 +5,10 @@ const { check } = require("express-validator");
 var router = express.Router();
 
 // Import authorization controller
-const { register, login, logout } = require("../controllers/auth");
+const { register, login, logout, reset } = require("../controllers/auth");
+
+// Import JSON Web Token middleware
+const { authUserToken } = require("../middleware/jwt");
 
 /**
  * @route   POST /auth/register
@@ -38,17 +41,29 @@ router.post(
 /**
  * @route   POST /auth/logout
  * @desc    Logout a user.
- * @requires None
+ * @requires JSON Web Token
  * @optional None
  * @access  Public
  */
-router.post("/logout", logout); // not implemented yet
-/* req.logout(function(err) {
-     if (err) {
-       return next(err);
-     }
-     res.redirect('/');
-   }); */
+router.post(
+    "/logout",
+    check("email").isEmail().normalizeEmail(),
+    authUserToken,
 
+    logout); // not implemented yet
+
+/**
+ * @route   POST /auth/reset
+ * @desc    Reset a user password.
+ * @requires JSON Web Token, New Password, Old Password
+ * @optional None
+ * @access  Public
+ */
+router.post(
+    "/reset",
+    check("email").isEmail().normalizeEmail(),
+    authUserToken,
+
+    reset); // not implemented yet
 
 module.exports = router;

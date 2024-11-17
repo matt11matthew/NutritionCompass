@@ -1,0 +1,174 @@
+/* General Layout */
+.dashboard-container {
+    padding: 20px;
+    background-color: #f5f5f5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-title {
+    font-size: 2rem;
+    color: #0033cc;
+    margin-bottom: 20px;
+}
+
+/* Content Layout */
+.dashboard-content {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Macros Section */
+/* Macros Section */
+.macros-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.macros-circle {
+    width: 250px; /* Increase the circle's overall size */
+    height: 250px; /* Keep it a perfect circle */
+    border: 12px solid #0033cc; /* Make the outline thicker */
+    border-radius: 50%; /* Ensures the shape remains circular */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1rem;
+    color: #0033cc;
+    margin-bottom: 20px; /* Add spacing below the circle */
+    position: relative;
+}
+
+.macros-circle h2 {
+    margin: 0;
+    font-size: 1.5rem; /* Make the title slightly larger */
+    font-weight: bold;
+    color: #0033cc;
+    position: absolute;
+    top: 15px; /* Adjust the title position */
+}
+
+.macros-circle p {
+    margin: 10px 0; /* Add spacing between text elements */
+    font-size: 1rem;
+    color: #0033cc;
+}
+
+.calories-summary {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #0033cc;
+    margin-top: 20px;
+}
+
+/* Meals Section */
+.meals-container {
+    flex: 2;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.meals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.add-meal-button {
+    background-color: #ffffff;
+    color: #0033cc;
+    border: 2px solid #0033cc;
+    border-radius: 5px;
+    padding: 5px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.add-meal-button:hover {
+    background-color: #0033cc;
+    color: #ffffff;
+}
+
+/* Meal Form */
+.meal-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.meal-input {
+    flex: 1;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Meal List */
+.meals-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.meal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e6f0ff;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.meal-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.meal-name {
+    font-size: 1rem;
+    color: #0033cc;
+}
+
+.meal-calories {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #0033cc;
+}
+
+/* Dots Menu */
+.meal-options {
+    display: flex;
+    gap: 10px;
+}
+
+.dots-menu {
+    font-size: 1rem;
+    color: #0033cc;
+    cursor: pointer;
+}
+
+.dots-menu:hover {
+    text-decoration: underline;
+}

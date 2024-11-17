@@ -4,6 +4,10 @@ const User = require("../models/User");
 // Import bcrypt to compare passwords
 const {compare} = require("bcrypt")
 
+// Import the JSON Web Token middleware functions
+const {verifyUserToken} = require("../middleware/jwt");
+const error = require("jsonwebtoken/lib/JsonWebTokenError");
+
 /**
  * @route   POST /auth/register
  * @desc    Register a new user.
@@ -11,6 +15,7 @@ const {compare} = require("bcrypt")
  * @optional First name, last name, weight, height, activity level
  * @access  Public
  */
+
 const register = async (req, res, next) => {
   // attempt to register new user
   // make sure they provide email and password
@@ -24,7 +29,7 @@ const register = async (req, res, next) => {
     return res.status(500).json({status: "error", data: [], message: error.message});
   }
 
-  /* // ahmed's implementation from app.js, this should also check if it exists and bring back an error if it cant use the input but i havent tested yet tho
+  /* // ahmed's implementation from app.js, this should also check if it exists but i havent tested yet tho
   const{email, password} = req.body;
   User.findOne({email:email}, (err,user)=>{
       if(user){
@@ -89,7 +94,7 @@ const login = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  // force jwt to expire
+  // attempted to force jwt to expire
   // tried implementing, let me know how goofy it is - ahmed
   try{
     res.cookie("token", "none", {
@@ -102,24 +107,32 @@ const logout = async (req, res, next) => {
   }
 };
 
-const reset = async (req, res, next) => {
-  const authToken = req.headers.authorization;
+const reset = async (req, res, next) => { //this ones big and i have no clue if it works - ahmed
+  try{
+    // token checking
+    // first if statement makes sure the token exists, second checks if it is valid, third checks to make sure it applies to a user
+    if(!(req.headers.authorization?.split(' ')[1])) { return res.status(401).json({status: "failed", data: [], message: "no jwt access token"}); }
+    const decoded = verifyUserToken(req.headers.authorization?.split(' ')[1]);
+    if(!decoded) {return res.status(401).json({status: "failed", data: [], message: "invalid token"}); }
+    const user = User.findById(decoded.id);
+    if(!(await user)) { return res.status(404).json({status: "failed", data: [], message: "no user exists"}); }
 
-  // ensure user has proper jwt
-  if(!authToken){
-    return res.status(401).json({status: "failed", data: [], message: "no token available"});
-  } else {
-    const token = authToken.split(" ")[1];
-    const isVerified = verifyUserToken(token);
-    if(!isVerified){
-      return res.status(401).json({status: "failed", data: [], message: "incorrect or no token available"});
-    }
+    // password checking
+    // first if statement checks for input of old and new passwords, second checks they arent the same (idk how user knows old password)
+    const {oldPassword, newPassword} = req.body;
+    if(!oldPassword || !newPassword){ return res.status(400).json({status: "failed", data: [], message: "missing password change"}); }
+    if(!(await compare.compare(oldPassword, newPassword))){ return res.status(401).json({status: "failed", data: [], message: "invalid password change"}); }
+
+    // actually changing password
+    // actually applying the change to the database needs the pre-save hook which we dont seem to have yet?
+    user.password = newPassword;
+    // await user.save(); // line that requires the pre-save hook
+    return res.status(200).json({status: "success", data: [], messages: "completed password change" });
+  } catch {
+    console.error(err); //debugging
+    return res.status(500).json({status: "failed", data: [], message: error.message});
   }
-  // require old password be input(someone may not remember?)
-
-  // reset password in database (should already be rehashed by pre-save hook)
 };
-
 
 module.exports = {
   register,

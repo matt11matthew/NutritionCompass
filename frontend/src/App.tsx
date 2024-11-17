@@ -6,6 +6,7 @@ import SignUpPage from './pages/SignUpPage';
 import UserProfilePage from './pages/UserProfilePage';
 import PageTitle from "./components/PageTitle";
 import FoodListPage from './pages/FoodListPage';
+import UserDashboardPage from "./pages/UserDashboardPage";
 import Login from './components/Login';
 import SignUp from "./components/SignUp";
 
@@ -23,7 +24,8 @@ function App() {
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/userprofile" element={<UserProfilePage />} />
-                    <Route path="/foodlist" element={<FoodListPage />} />
+                    <Route path="/food-list" element={<FoodListPage />} />
+                    <Route path="/user-dashboard" element={<UserDashboardPage />} />
                     {/* You can add more routes here */}
                 </Routes>
             </div>
