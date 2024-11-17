@@ -1,7 +1,7 @@
 /* General Layout */
 .dashboard-container {
     padding: 20px;
-    background-color: #f5f5f5;
+    background-color: #d7c5ad;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -22,7 +22,6 @@
     max-width: 1200px;
 }
 
-/* Macros Section */
 /* Macros Section */
 .macros-container {
     flex: 1;
