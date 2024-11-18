@@ -9,6 +9,7 @@ import FoodListPage from './pages/FoodListPage';
 import UserDashboardPage from "./pages/UserDashboardPage";
 import Login from './components/Login';
 import SignUp from "./components/SignUp";
+import AccountDetailsPage from "./pages/AccountDetailsPage";
 
 function App() {
     const[loggedIn, setLoggedIn] = React.useState(true);
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/userprofile" element={<UserProfilePage />} />
                     <Route path="/food-list" element={<FoodListPage />} />
                     <Route path="/user-dashboard" element={<UserDashboardPage />} />
+                    <Route path="/account-details" element={<AccountDetailsPage />} />
                     {/* You can add more routes here */}
                 </Routes>
             </div>
