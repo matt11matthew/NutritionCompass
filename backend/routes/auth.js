@@ -49,7 +49,6 @@ router.post(
     "/logout",
     check("email").isEmail().normalizeEmail(),
     authUserToken,
-
     logout); // not implemented yet
 
 /**
@@ -63,7 +62,6 @@ router.post(
     "/reset",
     check("email").isEmail().normalizeEmail(),
     authUserToken,
-
     reset); // not implemented yet
 
 module.exports = router;

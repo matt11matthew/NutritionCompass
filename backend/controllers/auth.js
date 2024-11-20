@@ -49,6 +49,24 @@ const register = async (req, res, next) => {
     }
 
     // check for optional fields
+    if (req.body.firstName) user.firstName = req.body.firstName;
+    if (req.body.lastName) user.lastName = req.body.lastName;
+    if (req.body.weight) user.weight = req.body.weight;
+    if (req.body.height) user.height = req.body.height;
+    if (req.body.activityLevel) user.activityLevel = req.body.activityLevel;
+    if (req.body.age) user.age = req.body.age;
+    if (req.body.sex) user.sex = req.body.sex;
+
+    try {
+      user.validate(); // validate user before saving
+    } catch (error) {
+      return res.status(400).json({
+        // this will be an error due to improper optional fields
+        status: "failed",
+        data: [],
+        message: error.message,
+      });
+    }
 
     // save user to database
     await user.save();
@@ -59,6 +77,7 @@ const register = async (req, res, next) => {
     });
   } catch (error) {
     return res.status(500).json({
+      // internal error
       status: "failed",
       data: [],
       message: error.message,
@@ -78,6 +97,7 @@ const register = async (req, res, next) => {
  */
 const login = async (req, res, next) => {
   // make sure email and password are provided
+  const { email, password } = req.body;
   if (!req.body.email || !req.body.password) {
     return res.status(400).json({
       status: "failed",
@@ -86,45 +106,46 @@ const login = async (req, res, next) => {
     });
   }
 
-  // ahmed's implementation from app.js, also not tested
-  const { email, password } = req.body;
-  // i can think of a few reasons why having these vars would help later but it might not be worth it honestly might remove them later
-  var id = -1;
-  // var email = '';
-  var fn = ""; //firstname
-  var ln = ""; //lastname
+  // find user in database
+  const user = await User.findOne({ email: email }).select("+password"); // force select password w/ +
+  if (!user) {
+    // user not found
+    return res.status(400).json({
+      status: "failed",
+      data: [],
+      message: "User not found.",
+    });
+  }
 
-  User.findOne({ email: email }, (error, user) => {
-    if (user) {
-      // we'll need to use bcrypt to compare the password
-      if (user.password === password) {
-        res.status(200).json({
-          status: "success",
-          data: [],
-          message: "Successfully logged in",
-          user: user,
-        });
-        id = user._id;
-        email = user.email;
-      } else {
-        res.status(400).json({
-          status: "failed",
-          data: [],
-          message: "The password is incorrect",
-        });
-        error = "The password is incorrect";
-      }
-    } else {
-      res.status(400).json({
-        status: "failed",
-        data: [],
-        message: "This username does not exist",
-      });
-      error = "This username does not exist";
-    }
+  // now have user, compare passwords using bcrypt
+  match = await compare(password, user.password);
+  if (!match) {
+    return res.status(400).json({
+      status: "failed",
+      data: [],
+      message: "Invalid password.",
+    });
+  }
+
+  // generate token and send to user
+  const token = genUserToken(user);
+  res.cookie("token", token, {
+    maxAge: 60 * 60 * 1000, // 1 hour
+    httpOnly: true,
+    secure: true,
+    SameSite: "None", // for cross-site cookies
   });
-  //res.status(200).json({ id:id, firstName:fn, lastName:ln, email:email, error:error});
+
+  // might want to send more data back?
+  res.status(200).json({
+    status: "success",
+    data: [{ email: user.email, id: user._id, token: token }],
+    message: "User logged in.",
+  });
+  res.end(); // just for safety
 };
+
+// have not tested below functions - dennis
 
 const logout = async (req, res, next) => {
   // attempted to force jwt to expire

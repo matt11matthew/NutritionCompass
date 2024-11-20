@@ -28,7 +28,7 @@ const verifyUserToken = (token) => {
 // Middleware authenticates a user's JSON token
 // Token is in header
 const authUserToken = (req, res, next) => {
-  const authToken = req.headers.authorization;
+  const authToken = req.cookies.token;
   console.log(authToken); // debugging
   if (!authToken) {
     return res
