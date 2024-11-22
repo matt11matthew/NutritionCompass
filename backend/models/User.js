@@ -43,8 +43,17 @@ const UserSchema = new Schema({
     type: String,
     enum: ["MALE", "FEMALE", "OTHER"],
   },
+  weightGoal: {
+    type: Number,
+    default: 0,
+  },
+  goalLength: {
+    type: Number,
+    default: 0,
+  }
 });
 
+// for ahmed: this is pre-save hook
 UserSchema.pre("save", async function (next) {
   // no need to re-hash password if it hasn't been modified
   if (!this.isModified("password")) return next();
@@ -59,4 +68,3 @@ UserSchema.pre("save", async function (next) {
 
 // Create a new model for a User and export it
 module.exports = model("User", UserSchema);
-// hey this is ahmed, im worried that the naming chosen here is going to conflict in other files

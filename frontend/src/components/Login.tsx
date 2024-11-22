@@ -35,7 +35,16 @@ import './Login.css';
                 body: JSON.stringify({ email, password })
             });
 
-            console.log(response);
+            response.then(data => {
+                if(data.ok) {
+                    setLoginResult("Login Successful");
+                    localStorage.setItem("token", data.json().token);
+                    navigate('/dashboard');
+                }
+
+                console.log(response);
+            });
+
 
         } catch (error) {
             console.error('Error logging in:', error);

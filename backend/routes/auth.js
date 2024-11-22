@@ -10,6 +10,14 @@ const { register, login, logout, reset } = require("../controllers/auth");
 // Import JSON Web Token middleware
 const { authUserToken } = require("../middleware/jwt");
 
+// NOTE
+// If a route needs to be protected, include authUserToken middleware before final
+// function call (actual controller)
+// This will pass their cookie through the middleware and then verify them
+// Frontend shouldn't(?) need to do anything; any unverified requests will result in 401 error
+// IF YOU DO NEED BACK TOKEN
+// It can be obtained through the login API response
+
 /**
  * @route   POST /auth/register
  * @desc    Register a new user.

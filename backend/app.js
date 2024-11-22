@@ -6,8 +6,6 @@ const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const User = require("./models/User");
-
 // Set up routers for routes
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -15,8 +13,9 @@ const authRouter = require("./routes/auth");
 // const foodRouter = require("./routes/foods"); // not yet implemented
 
 const app = express();
-require("dotenv").config(); // load environment variables
 
+// set up environment and middleware
+require("dotenv").config(); // load environment variables
 app.use(cors()); // default Access-Control-Allow-Origin: *
 app.use(logger("dev"));
 app.use(express.json());
@@ -24,9 +23,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// set up external routers
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+// app.use("/foods", foodRouter); // not yet implemented
 
 // connect to database
 const start = async () => {

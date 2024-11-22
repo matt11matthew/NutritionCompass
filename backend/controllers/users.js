@@ -25,7 +25,13 @@ const getUsers = async (req, res, next) => {
  * @access  Public
  */
 const getUserById = async (req, res, next) => {
-  res.send("respond with a resource");
+  const userId = req.params.id;
+  const user = User.findById(userId);
+  if (!user) {
+    res.status(400).json({status: "failure", data: [], message: "No user found."});
+  }
+
+  res.status(200).json({status: "success", data: user, message: "User found."})
 };
 
 /**

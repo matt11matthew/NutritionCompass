@@ -9,7 +9,6 @@ const {
   genUserToken,
   verifyUserToken,
 } = require("../middleware/jwt");
-const error = require("jsonwebtoken/lib/JsonWebTokenError");
 
 /**
  * @route   POST /auth/register
@@ -32,7 +31,7 @@ const register = async (req, res, next) => {
     });
 
   // ahmed's implementation from app.js, this should also check if it exists but i havent tested yet tho
-  // mongoose Model.findOne() no longer accepts a callback apparently, so needed to change slightly - dennis
+  // mongoose Model.findOne() no longer accepts a callback apparently, so needed to change it - dennis
   try {
     // create new user
     const user = new User({ email, password });
@@ -75,9 +74,12 @@ const register = async (req, res, next) => {
   }
 
   res.end(); // just for safety
-  // either return user to login page or actually log them in and take to dashboard?
+  // by end of register, user does NOT get issued a token
+  // they must login first
+  // redirect to login or home page with successfully registered message
 };
 
+// THIS IS WHERE JWT COOKIE IS CREATED FOR USERS
 /**
  * @route   POST /auth/login
  * @desc    Login a user.
@@ -118,18 +120,21 @@ const login = async (req, res, next) => {
   }
 
   // generate token and send to user
+  // COOKIE HERE
+  // SAVED AS "token"
+  // EXPIRES after 1 hour
   const token = genUserToken(user);
   res.cookie("token", token, {
     maxAge: 60 * 60 * 1000, // 1 hour
     httpOnly: true,
-    // secure: true,
+    // secure: true, // once we get https, re-enable
     SameSite: "None", // for cross-site cookies
   });
 
-  // might want to send more data back?
+  // currently sends back user's email, id, and JWT issued to them
   res.status(200).json({
     status: "success",
-    data: [{ email: user.email, id: user._id, token: token }],
+    data: [{ email: user.email, id: user._id, token: token }], // returns token too
     message: "User logged in.",
   });
   res.end(); // just for safety
@@ -180,6 +185,7 @@ const reset = async (req, res, next) => {
 
     // password checking
     // first if statement checks for input of old and new passwords, second checks they arent the same (idk how user knows old password)
+    // ^ dennis: without email, not super sure how they could get their old password
     const { oldPassword, newPassword } = req.body;
     if (!oldPassword || !newPassword) {
       return res.status(400).json({
@@ -188,7 +194,8 @@ const reset = async (req, res, next) => {
         message: "missing password change",
       });
     }
-    if (!(await compare.compare(oldPassword, newPassword))) {
+    // no need for compare.compare, it's already imported as compare
+    if (!(await compare(oldPassword, newPassword))) {
       return res.status(401).json({
         status: "failed",
         data: [],
@@ -202,7 +209,7 @@ const reset = async (req, res, next) => {
     return res.status(200).json({
       status: "success",
       data: [],
-      messages: "completed password change",
+      message: "completed password change",
     });
   } catch {
     console.error(err); //debugging
