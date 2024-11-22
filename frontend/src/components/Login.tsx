@@ -12,11 +12,8 @@ import './Login.css';
      const [loginResult, setLoginResult] = useState<string>('');
 
      const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-         setEmailError(e.target.value);
-         if(!email) {
-
-         }
-
+         setEmail(e.target.value);
+         setEmailError("");
      }
 
     const doLogin = async() => {
