@@ -1,19 +1,7 @@
 const User = require("../models/User");
 
-/*
-// pre-save hook hashing attempt
-const mongoose = require("mongoose");
-
-const userSchema = new mongoose.Schema({
-  email: {type: String, required: true, unique: true},
-  password: {type: String, required: true},
-)};
-
-userSchema.pre("save", async function (next)){
-  if (this.isModified("password")) { this.password = await bcrypt.hash.(this.password 10); }
-  next();
-});
- */
+// note for ahmed: pre-save hooks are in models/User.js
+// they should stick with model definition
 
 /**
  * @route   GET /users
@@ -75,7 +63,6 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
-  //userSchema,
   getUsers,
   getUserById,
   updateUser,

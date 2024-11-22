@@ -35,6 +35,7 @@ router.post(
   "/login",
   check("email").isEmail().normalizeEmail(),
   check("password").notEmpty(),
+  authUserToken,
   login
 );
 

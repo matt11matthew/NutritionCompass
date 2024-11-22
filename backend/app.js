@@ -5,26 +5,19 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const expressSession = require("express-session");
-
 
 const User = require("./models/User");
 
-
+// Set up routers for routes
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
+// const foodRouter = require("./routes/foods"); // not yet implemented
 
 const app = express();
 require("dotenv").config(); // load environment variables
-app.use(
-  expressSession({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
 
+app.use(cors()); // default Access-Control-Allow-Origin: *
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,11 +28,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 
-// common practice is to put this before functions but im not sure
-//mongoose.connect(process.env.MONGO_URI);
-
-
-// For use with personal testing db
+// connect to database
 const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -50,6 +39,5 @@ const start = async () => {
 };
 
 start();
-// End of personal testing db use
 
 module.exports = app;

@@ -8,7 +8,6 @@ const { compare } = require("bcrypt");
 const {
   genUserToken,
   verifyUserToken,
-  authUserToken,
 } = require("../middleware/jwt");
 const error = require("jsonwebtoken/lib/JsonWebTokenError");
 
@@ -55,21 +54,12 @@ const register = async (req, res, next) => {
     if (req.body.height) user.height = req.body.height;
     if (req.body.activityLevel) user.activityLevel = req.body.activityLevel;
     if (req.body.age) user.age = req.body.age;
-    if (req.body.sex) user.sex = req.body.sex;
-
-    try {
-      user.validate(); // validate user before saving
-    } catch (error) {
-      return res.status(400).json({
-        // this will be an error due to improper optional fields
-        status: "failed",
-        data: [],
-        message: error.message,
-      });
-    }
+    if (req.body.sex) user.sex = req.body.sex
 
     // save user to database
-    await user.save();
+    await user.save(); // only error should be from optional fields
+
+    // send successful response
     res.status(201).json({
       status: "success",
       data: [],
@@ -118,7 +108,7 @@ const login = async (req, res, next) => {
   }
 
   // now have user, compare passwords using bcrypt
-  match = await compare(password, user.password);
+  let match = await compare(password, user.password);
   if (!match) {
     return res.status(400).json({
       status: "failed",
@@ -132,7 +122,7 @@ const login = async (req, res, next) => {
   res.cookie("token", token, {
     maxAge: 60 * 60 * 1000, // 1 hour
     httpOnly: true,
-    secure: true,
+    // secure: true,
     SameSite: "None", // for cross-site cookies
   });
 
@@ -181,7 +171,7 @@ const reset = async (req, res, next) => {
         .status(401)
         .json({ status: "failed", data: [], message: "invalid token" });
     }
-    const user = User.findById(decoded.id);
+    const user = User.findById(decoded.id).select("+password"); // force select password
     if (!(await user)) {
       return res
         .status(404)
@@ -207,9 +197,8 @@ const reset = async (req, res, next) => {
     }
 
     // actually changing password
-    // actually applying the change to the database needs the pre-save hook which we dont seem to have yet?
     user.password = newPassword;
-    // await user.save(); // line that requires the pre-save hook
+    await user.save();
     return res.status(200).json({
       status: "success",
       data: [],
