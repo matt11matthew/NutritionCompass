@@ -27,7 +27,7 @@ import './Login.css';
         console.log(password);
 
         try {
-            const response =  fetch('http://nc-api.matthewe.me/users/login', {
+            const response =  fetch('http://157.245.242.118:3001/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ import './Login.css';
                     const json = await data.json();
                     setLoginResult("Login Successful");
                     localStorage.setItem("token", json.data[0].token);
-                    navigate('/dashboard');
+                    navigate('/user-dashboard');
                 }
 
                 console.log(response);

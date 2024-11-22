@@ -42,7 +42,18 @@ const getUserById = async (req, res, next) => {
  * @access  Users
  */
 const updateUser = async (req, res, next) => {
-  res.send("respond with a resource");
+  try {
+    const id = req.params.id;
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(400).json({status: "failed", data: [], message: "User does not exist."});
+    }
+
+    // user exists, see what changes to apply
+    // STILL NEEDS WORK
+  } catch (error) {
+    res.status(500).json({ status: "error", data: [], message: error.message });
+  }
 };
 
 /**

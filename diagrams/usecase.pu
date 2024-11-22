@@ -39,7 +39,6 @@ package "Nutrtion Compass Website" {
     ' Registration
     u --> register
     register ..> hash : <<include>>
-    register ..> verify_email : <<include>>
     hash --> db
 
     ' User Management

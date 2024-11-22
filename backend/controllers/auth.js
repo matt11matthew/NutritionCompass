@@ -53,7 +53,7 @@ const register = async (req, res, next) => {
     if (req.body.height) user.height = req.body.height;
     if (req.body.activityLevel) user.activityLevel = req.body.activityLevel;
     if (req.body.age) user.age = req.body.age;
-    if (req.body.sex) user.sex = req.body.sex
+    if (req.body.sex) user.sex = req.body.sex;
 
     // save user to database
     await user.save(); // only error should be from optional fields
