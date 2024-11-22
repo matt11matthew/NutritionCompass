@@ -17,6 +17,7 @@ const { authUserToken } = require("../middleware/jwt");
 // Frontend shouldn't(?) need to do anything; any unverified requests will result in 401 error
 // IF YOU DO NEED BACK TOKEN
 // It can be obtained through the login API response
+// OR ahmed and I can implement a special function for it
 
 /**
  * @route   POST /auth/register

@@ -35,10 +35,11 @@ import './Login.css';
                 body: JSON.stringify({ email, password })
             });
 
-            response.then(data => {
+            response.then(async (data) => {
                 if(data.ok) {
+                    const json = await data.json();
                     setLoginResult("Login Successful");
-                    localStorage.setItem("token", data.json().token);
+                    localStorage.setItem("token", json.data[0].token);
                     navigate('/dashboard');
                 }
 
