@@ -13,7 +13,10 @@ import './Login.css';
 
      const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
          setEmailError(e.target.value);
-         setEmail("");
+         if(!email) {
+             
+         }
+
      }
 
     const doLogin = async() => {
