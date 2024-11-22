@@ -14,7 +14,7 @@ import './Login.css';
      const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
          setEmailError(e.target.value);
          if(!email) {
-             
+
          }
 
      }
