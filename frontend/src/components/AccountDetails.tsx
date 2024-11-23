@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, TextField, Typography, Box, Grid} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import './AccountDetails.css';
 
 function AccountDetails() {
     const navigate = useNavigate

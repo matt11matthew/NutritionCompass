@@ -39,3 +39,8 @@ a {
 a:visited{
     color: #ab96d6 !important;
 }
+
+#loginResult{
+    color: #fb7070;
+    text-shadow: 0 0 3px #000000;
+}

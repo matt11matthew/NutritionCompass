@@ -36,22 +36,24 @@ function UserDashboard() {
 
     return (
         <div className="dashboard-container">
-            <h1 className="dashboard-title">User Dashboard</h1>
             <div className="dashboard-content">
                 {/* Left Section - Macros */}
                 <div className="macros-container">
-                    <div className="macros-circle">
-                        <h2>Macros</h2>
-                        <p>Carbs: #/# grams</p>
-                        <p>Protein: #/# grams</p>
-                        <p>Fats: #/# grams</p>
+                    <h1 className="dashboard-title">User Dashboard</h1>
+                    <div id='macros-content'>
+                        <div className="macros-circle">
+                            <h2>Macros</h2>
+                            <p>Carbs: #/# grams</p>
+                            <p>Protein: #/# grams</p>
+                            <p>Fats: #/# grams</p>
+                        </div>
+                        <div className="calories-summary">Calories: Eaten/Allowed</div>
                     </div>
-                    <div className="calories-summary">Calories: Eaten/Allowed</div>
                 </div>
 
                 {/* Right Section - Meals */}
                 <div className="meals-container">
-                    <div className="meals-header">
+                <div className="meals-header">
                         <h2>Today's Meals</h2>
                         <button className="add-meal-button" onClick={addMeal}>
                             {editingIndex !== null ? "Update Meal" : "Add New Meal"}
@@ -63,7 +65,7 @@ function UserDashboard() {
                             placeholder="Meal name"
                             value={newMeal.name}
                             onChange={(e) =>
-                                setNewMeal({ ...newMeal, name: e.target.value })
+                                setNewMeal({...newMeal, name: e.target.value})
                             }
                             className="meal-input"
                         />
@@ -72,7 +74,7 @@ function UserDashboard() {
                             placeholder="Calories"
                             value={newMeal.calories}
                             onChange={(e) =>
-                                setNewMeal({ ...newMeal, calories: parseInt(e.target.value) || 0 })
+                                setNewMeal({...newMeal, calories: parseInt(e.target.value) || 0})
                             }
                             className="meal-input"
                         />
