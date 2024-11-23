@@ -3,7 +3,7 @@ import { Button, TextField, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './SignUp.css';
 
- function SignUp() {
+function SignUp() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -12,6 +12,7 @@ import './SignUp.css';
     const [passwordError, setPasswordError] = useState<string>('');
     const [confirmPasswordError, setConfirmPasswordError] = useState<string>('');
     const [signupResult, setSignUpResult] = useState<string>('');
+    const navigate = useNavigate();
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -28,12 +29,9 @@ import './SignUp.css';
         setConfirmPasswordError('');
     };
 
-    //init nav:
-     const navigate = useNavigate();
-    //email validation:
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         let valid = true;
         //check email:
         if(!email || !emailRegex.test(email)) {
@@ -53,19 +51,30 @@ import './SignUp.css';
 
         //call API if all is correct:
         if(valid){
-            let Creation = true;
             //API call stuff, if it in invalid call, make Creation = false;
-            //naviagtion to /accountInfo
             try{
                 //api stuff:
                 // response will be the call
-                const response =  fetch('http://nc-api.matthewe.me/users/login', {
+                const response =  fetch('http://157.245.242.118:3001/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ email, password })
                 });
+
+                response.then(async (data) => {
+                    if(data.ok) {
+                        const json = await data.json();
+                        setSignUpResult('Account created successfully!');
+                        navigate('/login');
+                    }
+                    else {
+                        const errorJson = await data.json();
+                        setSignUpResult(errorJson.message || 'Failed to create account.');
+                    }
+                });
+
 
                 console.log(response);
             }catch(error){
