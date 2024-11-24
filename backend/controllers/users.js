@@ -13,8 +13,8 @@ const User = require("../models/User");
 const getUsers = async (req, res, next) => {
   const users = await User.find();
   res
-    .status(200)
-    .json({ status: "success", data: users, message: "Users found." });
+      .status(200)
+      .json({ status: "success", data: users, message: "Users found." });
 };
 
 /**
@@ -44,13 +44,24 @@ const getUserById = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const id = req.params.id;
+    const updates = req.body;
+
     const user = await User.findById(id);
     if (!user) {
       res.status(400).json({status: "failed", data: [], message: "User does not exist."});
     }
 
-    // user exists, see what changes to apply
-    // STILL NEEDS WORK
+    Object.keys(updates).forEach((key) => {
+      user[key] = updates[key];
+    });
+
+    // save updated user
+    await user.save();
+    res.status(200).json({
+      status: "success",
+      data: user,
+      message: "User profile updated successfully.",
+    });
   } catch (error) {
     res.status(500).json({ status: "error", data: [], message: error.message });
   }
@@ -68,12 +79,12 @@ const deleteUser = async (req, res, next) => {
     const deleted = await User.findByIdAndDelete(req.params.id);
     if (!deleted) {
       return res
-        .status(404)
-        .json({ status: "error", data: [], message: "User not found." });
+          .status(404)
+          .json({ status: "error", data: [], message: "User not found." });
     }
     res
-      .status(200)
-      .json({ status: "success", data: [], message: "User deleted." });
+        .status(200)
+        .json({ status: "success", data: [], message: "User deleted." });
   } catch (err) {
     res.status(500).json({ status: "error", data: [], message: err.message });
   }
