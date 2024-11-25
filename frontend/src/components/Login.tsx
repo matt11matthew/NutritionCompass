@@ -3,7 +3,11 @@ import { Button, TextField, Typography, Box } from '@mui/material';
 import { useNavigate} from 'react-router-dom'
 import './Login.css';
 
- function Login() {
+interface LoginProps {
+    onLogin: () => void;
+}
+
+ function Login({ onLogin }: LoginProps) {
 
      const navigate = useNavigate();
      const [email, setEmail] = useState<string>('');
@@ -40,6 +44,7 @@ import './Login.css';
                     const json = await data.json();
                     setLoginResult("Login Successful");
                     localStorage.setItem("token", json.data[0].token);
+                    onLogin();
                     navigate('/user-dashboard');
                 }
 

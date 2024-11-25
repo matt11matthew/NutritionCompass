@@ -1,25 +1,175 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './UserProfile.css';
+import { useNavigate } from 'react-router-dom';
+import {Simulate} from "react-dom/test-utils";
+// import jwt_decode from 'jwt-decode'; may need to insall this package
+import error = Simulate.error;
 
 function UserProfile() {
+    const navigate = useNavigate();
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [age, setAge] = useState('');
+    const [weight, setWeight] = useState('');
+    const [sex, setSex] = useState('');
+    const [heightFt, setHeightFt] = useState('');
+    const [heightInches, setHeightInches] = useState('');
+    const [activityLevel, setActivityLevel] = useState('');
+    const [weightGoal, setWeightGoal] = useState('');
+    const [statusMessage, setStatusMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(true); //loading state
+    const [userId, setUserId] = useState('');
+
+    //get the user data to populate the fields (if there is any):
+    useEffect(() => {
+
+        const fetchUserData = async () => {
+            const token = localStorage.getItem('token');
+            if(!token) {
+                setStatusMessage('User not logged in');
+                setIsLoading(false);
+                return;
+            }
+            try {
+                // may need the package to decode the token to get userID.
+                // // Decode the token to get user info (userId)
+                // const decodedToken = jwt_decode<{ userId: string }>(token);
+                // const userId = decodedToken?.userId;
+
+                // if (!userId) {
+                //     setStatusMessage('No user ID found in token');
+                //     setIsLoading(false);
+                //     return;
+                // }
+
+                const response = await fetch(`http://localhost:3000/users/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserId(data._id); // Save the user's ID
+
+                    // Population:
+                    setFirstName(data.firstName || '');
+                    setLastName(data.lastName || '');
+                    setAge(data.age || '');
+                    setWeight(data.weight || '');
+                    setSex(data.sex || '');
+                    setHeightFt(data.height && data.height.split("'")[0] || '');
+                    setHeightInches(data.height && data.height.split("'")[1] || '');
+                    setActivityLevel(data.activityLevel || '');
+                    setWeightGoal(data.weightGoal || '');
+                } else {
+                    setStatusMessage('Enter information for calculation');
+                }
+            }catch(error){
+                setStatusMessage('Failed to fetch user profile.');
+                console.error(error);
+            }finally {
+                setIsLoading(false); // Set loading to false once data is fetched or if there's an error
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        //conv to json:
+        const profileData = {
+            firstName,
+            lastName,
+            age,
+            weight,
+            sex,
+            height: `${heightFt}'${heightInches}"`,
+            activityLevel,
+            weightGoal
+        };
+
+        //im unfamiliar with the token system, so please review this GET.
+        try{
+            const token = localStorage.getItem('token');
+            if(!token){
+                setStatusMessage('User not logged in');
+                return;
+            }
+
+            const response = await fetch(`http://localhost:3000/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(profileData),
+            });
+            if (response.ok) {
+                setStatusMessage('Profile saved successfully!');
+            } else {
+                setStatusMessage('Failed to save profile.');
+            }
+        } catch (error) {
+            setStatusMessage('An error occurred while saving the profile.');
+            console.error('Error submitting form:', error);
+        }
+    };
+
     return (
         <div className="user-profile-container">
             <h2 className="user-profile-title">User Profile</h2>
-            <form className="user-profile-form">
+            {isLoading ? (
+                <div>Loading...</div> //loading message
+            ) : (
+            <form className="user-profile-form" onSubmit={handleSubmit}>
                 <label>First Name</label>
-                <input type="text" className="user-profile-input" placeholder="First Name"/>
+                <input
+                    type="text"
+                    className="user-profile-input"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                />
 
                 <label>Last Name</label>
-                <input type="text" className="user-profile-input" placeholder="Last Name"/>
+                <input
+                    type="text"
+                    className="user-profile-input"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                />
 
                 <label>Age (lbs)</label>
-                <input type="text" className="user-profile-input" placeholder="Age"/>
+                <input
+                    type="text"
+                    className="user-profile-input"
+                    placeholder="Age"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                />
 
                 <label>Weight (lbs)</label>
-                <input type="text" className="user-profile-input" placeholder="Weight (lbs)"/>
+                <input
+                    type="text"
+                    className="user-profile-input"
+                    placeholder="Weight (lbs)"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                />
 
                 <label>Sex</label>
-                <select className="user-profile-select">
+                <select
+                    className="user-profile-select"
+                    value={sex}
+                    onChange={(e) => setSex(e.target.value)}
+                >
                     <option value="">Select</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -27,13 +177,21 @@ function UserProfile() {
 
                 <label>Height (feet inches)</label>
                 <div style={{display: 'flex', gap: '0.5vw'}}>
-                    <select className="user-profile-select">
+                    <select
+                        className="user-profile-select"
+                        value={heightFt}
+                        onChange={(e) => setHeightFt(e.target.value)}
+                    >
                         <option value="">Ft</option>
                         <option value="4">4</option>
                         <option value="5">5</option>
                         <option value="6">6</option>
                     </select>
-                    <select className="user-profile-select">
+                    <select
+                        className="user-profile-select"
+                        value={heightInches}
+                        onChange={(e) => setHeightInches(e.target.value)}
+                    >
                         <option value="">In</option>
                         <option value="0">0</option>
                         <option value="1">1</option>
@@ -51,7 +209,11 @@ function UserProfile() {
                 </div>
 
                 <label>Activity Level</label>
-                <select className="user-profile-select">
+                <select
+                    className="user-profile-select"
+                    value={activityLevel}
+                    onChange={(e) => setActivityLevel(e.target.value)}
+                >
                     <option value="">Activity Level</option>
                     <option value="low">Low: &lt;7,500 steps/day</option>
                     <option value="moderate">Moderate: 7,500–9,999 steps/day</option>
@@ -59,15 +221,22 @@ function UserProfile() {
                 </select>
 
                 <label>Weight Goal</label>
-                <select className="user-profile-select">
+                <select
+                    className="user-profile-select"
+                    value={weightGoal}
+                    onChange={(e) => setWeightGoal(e.target.value)}
+                >
                     <option value="">Weight Goal</option>
                     <option value="lose">Lose Weight</option>
                     <option value="maintain">Maintain Weight</option>
                     <option value="gain">Gain Weight</option>
                 </select>
 
-                <button type="button" className="save-button">Save Changes</button>
+                <button type="submit" className="save-button">Save Changes</button>
             </form>
+            )}
+
+            {statusMessage && <div className="status-message">{statusMessage}</div>}
         </div>
     );
 }

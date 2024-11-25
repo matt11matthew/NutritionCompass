@@ -15,15 +15,16 @@ function App() {
     const[loggedIn, setLoggedIn] = React.useState(true);
 
     const handleLogout = () =>setLoggedIn(false);
+    const handleLogin = () =>setLoggedIn(true);
 
     return (
         <Router>
             <div className="background-container">
                 <PageTitle loggedIn={loggedIn} handleLogout={handleLogout} />
                 <Routes>
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
                     <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/" element={<LoginPage />} />
+                    <Route path="/" element={<LoginPage onLogin={handleLogin}/>} />
                     <Route path="/userprofile" element={<UserProfilePage />} />
                     <Route path="/food-list" element={<FoodListPage />} />
                     <Route path="/user-dashboard" element={<UserDashboardPage />} />

@@ -25,14 +25,23 @@ const getUsers = async (req, res, next) => {
  * @access  Public
  */
 const getUserById = async (req, res, next) => {
-  const userId = req.params.id;
-  const user = User.findById(userId);
-  if (!user) {
-    res.status(400).json({status: "failure", data: [], message: "No user found."});
-  }
+  try {
+    const userId = req.params.id;
 
-  res.status(200).json({status: "success", data: user, message: "User found."})
+    // Fetch the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ status: "failure", message: "User not found." });
+    }
+
+    // Respond with the user data
+    res.status(200).json({ status: "success", data: user, message: "User found." });
+  } catch (error) {
+    console.error("Error fetching user:", error.message);
+    res.status(500).json({ status: "error", message: "An error occurred while fetching the user." });
+  }
 };
+
 
 /**
  * @route   PUT /users/:id
@@ -59,17 +68,23 @@ const updateUser = async (req, res) => {
     // Update fields directly
     Object.keys(updates).forEach((key) => {
       user[key] = updates[key];
+      console.log("Key:", key);
+      console.log("User Key:", user[key]);
+      console.log("Updates Key:", updates[key]);
     });
 
-    console.log("User before saving:", user);
+
+    console.log("Users before saving:", user);
 
     // Save the updated user document
     const updatedUser = await user.save();
 
+    console.log("User after saving:", updatedUser);
+
     // Respond with the updated user
     res.status(200).json({
       status: "success",
-      data: updatedUser,
+      data: user,
       message: "User profile updated successfully.",
     });
   } catch (error) {
