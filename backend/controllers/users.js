@@ -41,31 +41,46 @@ const getUserById = async (req, res, next) => {
  * @optional First name, last name, weight, height, activity level
  * @access  Users
  */
-const updateUser = async (req, res, next) => {
+const updateUser = async (req, res) => {
   try {
-    const id = req.params.id;
-    const updates = req.body;
+    const id = req.params.id; // Get the user ID from the request parameters
+    const updates = req.body; // Get the update data from the request body
 
+    console.log("Received updates:", updates);
+    // Find the user by ID
     const user = await User.findById(id);
     if (!user) {
-      res.status(400).json({status: "failed", data: [], message: "User does not exist."});
+      return res.status(404).json({
+        status: "failed",
+        message: "User not found.",
+      });
     }
 
+    // Update fields directly
     Object.keys(updates).forEach((key) => {
       user[key] = updates[key];
     });
 
-    // save updated user
-    await user.save();
+    console.log("User before saving:", user);
+
+    // Save the updated user document
+    const updatedUser = await user.save();
+
+    // Respond with the updated user
     res.status(200).json({
       status: "success",
-      data: user,
+      data: updatedUser,
       message: "User profile updated successfully.",
     });
   } catch (error) {
-    res.status(500).json({ status: "error", data: [], message: error.message });
+    console.error("Error updating user:", error.message);
+    res.status(500).json({
+      status: "error",
+      message: "An error occurred while updating the user profile.",
+    });
   }
 };
+
 
 /**
  * @route   DELETE /users/:id

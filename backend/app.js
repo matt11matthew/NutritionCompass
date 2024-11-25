@@ -10,6 +10,8 @@ const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
+const foodsRouter = require("./routes/foods");
+
 // const foodRouter = require("./routes/foods"); // not yet implemented
 
 const app = express();
@@ -27,6 +29,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+app.use("/foods", foodsRouter);
+
 // app.use("/foods", foodRouter); // not yet implemented
 
 // connect to database
