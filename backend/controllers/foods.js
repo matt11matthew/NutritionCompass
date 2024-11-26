@@ -87,7 +87,7 @@ const updateFood = async (req, res, next) => {
 };
 
 /**
- * @route   PUT /foods/:id/add-user
+ * @route   PUT /foods/:id/addUser
  * @desc    Adds user's ID to userID array of a food.
  * @requires Food ID, User ID
  * @optional None
