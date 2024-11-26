@@ -107,7 +107,7 @@ const updateUser = async (req, res) => {
  */
 const deleteUser = async (req, res, next) => {
   try {
-    const deleted = await User.findAndDelete(req.params.id);
+    const deleted = await User.findByIDAndDelete(req.params.id);
     if (!deleted) {
       return res
           .status(404)
