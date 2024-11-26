@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Food = require("../models/Food");
 
 // note for ahmed: pre-save hooks are in models/User.js
 // they should stick with model definition
@@ -106,12 +107,22 @@ const updateUser = async (req, res) => {
  */
 const deleteUser = async (req, res, next) => {
   try {
-    const deleted = await User.findByIdAndDelete(req.params.id);
+    const deleted = await User.findAndDelete(req.params.id);
     if (!deleted) {
       return res
           .status(404)
           .json({ status: "error", data: [], message: "User not found." });
     }
+
+    // food deletion management below, first deletes userid from foods, second deletes all foods user created, PICK ONE BASED ON DESIGN
+
+    await Food.updateMany( // if we opt for multiple users per food, we will need this & next few lines
+      { userIds: req.params.id }, 
+      { $pull: { userIds: req.params.id } }
+    );
+
+    // await Food.deleteMany({ userId: req.params.id }); // if we opt for unique foods per user, we will need this line
+
     res
         .status(200)
         .json({ status: "success", data: [], message: "User deleted." });

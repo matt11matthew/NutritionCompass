@@ -87,6 +87,49 @@ const updateFood = async (req, res, next) => {
 };
 
 /**
+ * @route   PUT /foods/:id/add-user
+ * @desc    Adds user's ID to userID array of a food.
+ * @requires Food ID, User ID
+ * @optional None
+ * @access  Public
+ */
+ const addUserToFood = async (req, res, next) => {
+    try {
+      const { userId } = req.body; 
+      const foodId = req.params.id;
+  
+      if (!userId) {
+        return res
+          .status(400)
+          .json({ status: "error", data: [], message: "User ID required." });
+      }
+  
+      const updatedFood = await Food.findByIdAndUpdate(
+        foodId,
+        { $addToSet: { userIds: userId } },
+        { new: true /*, runValidators: true*/ } 
+      );
+  
+      if (!updatedFood) {
+        return res
+          .status(404)
+          .json({ status: "failure", data: [], message: "Food item not found." });
+      }
+  
+      res
+        .status(200)
+        .json({
+          status: "success",
+          data: updatedFood,
+          message: "User added to food item successfully.",
+        });
+    } catch (error) {
+      res.status(500).json({ status: "error", data: [], message: error.message });
+    }
+  };
+  
+
+/**
  * @route   DELETE /foods/:id
  * @desc    Delete a food by ID.
  * @requires Food ID
@@ -114,5 +157,6 @@ module.exports = {
     getFoodById,
     createFood,
     updateFood,
+    addUserToFood,
     deleteFood,
 };

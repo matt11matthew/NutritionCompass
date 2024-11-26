@@ -8,6 +8,7 @@ const {
     getFoods,
     getFoodById,
     updateFood,
+    addUserToFood,
     deleteFood,
 } = require("../controllers/foods");
 
@@ -46,6 +47,15 @@ router.get("/:id", getFoodById);
  * @access  Public
  */
 router.put("/:id", updateFood);
+
+/**
+ * @route   PUT /foods/:id/add-user
+ * @desc    Adds user's ID to userID array of a food.
+ * @requires Food ID, User ID
+ * @optional None
+ * @access  Public
+ */
+router.put("/:id/addUser", addUserToFood);
 
 /**
  * @route   DELETE /foods/:id
