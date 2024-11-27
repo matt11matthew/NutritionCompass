@@ -31,7 +31,7 @@ interface LoginProps {
         console.log(password);
 
         try {
-            const response =  fetch('http://157.245.242.118:3001/auth/login', {
+            const response =  await fetch('http://157.245.242.118:3001/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -39,17 +39,24 @@ interface LoginProps {
                 body: JSON.stringify({ email, password })
             });
 
-            response.then(async (data) => {
-                if(data.ok) {
-                    const json = await data.json();
-                    setLoginResult("Login Successful");
-                    localStorage.setItem("userId", json.data[0].userId);
-                    onLogin();
-                    navigate('/user-dashboard');
-                }
+            if (response.ok) {
+                const json = await response.json();
 
-                console.log(response);
-            });
+                console.log('Response JSON:', json); // Debugging the response
+
+                // Assuming backend returns json.data.userId as a single object
+                const userId = json.data.userId;
+                localStorage.setItem("userId", json.data[0]._id);
+
+                setLoginResult("Login Successful");
+                onLogin(); // Call parent or higher-level function if needed
+                navigate('/user-dashboard'); // Navigate to dashboard
+            }
+            else {
+                const error = await response.json();
+                console.error('Login failed:', error.message);
+                setLoginResult(error.message || "Login failed. Please try again.");
+            }
 
 
         } catch (error) {

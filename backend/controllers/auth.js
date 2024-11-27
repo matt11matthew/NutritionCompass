@@ -134,7 +134,7 @@ const login = async (req, res, next) => {
   // currently sends back user's email, id, and JWT issued to them
   res.status(200).json({
     status: "success",
-    data: [{ email: user.email, id: user._id, token: token }], // returns token too
+    data: [{ email: user.email, _id: user._id, token: token }], // returns token too
     message: "User logged in.",
   });
   res.end(); // just for safety

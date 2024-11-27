@@ -55,7 +55,13 @@ const updateUser = async (req, res) => {
   try {
     const id = req.params.id; // Get the user ID from the request parameters
     const updates = req.body; // Get the update data from the request body
-
+    console.log("Received userId in params:", id);
+    if (!id) {
+      return res.status(400).json({
+        status: "failed",
+        message: "User ID is required.",
+      });
+    }
     console.log("Received updates:", updates);
     // Find the user by ID
     const user = await User.findById(id);
@@ -104,7 +110,7 @@ const updateUser = async (req, res) => {
  */
 const deleteUser = async (req, res, next) => {
   try {
-    const deleted = await User.findByIDAndDelete(req.params.id);
+    const deleted = await User.findByIdAndDelete(req.params.id);
     if (!deleted) {
       return res
           .status(404)

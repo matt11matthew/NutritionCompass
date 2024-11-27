@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './UserProfile.css';
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
+// import {Simulate} from "react-dom/test-utils";
+// import error = Simulate.error;
 
 function UserProfile() {
 
@@ -16,65 +16,67 @@ function UserProfile() {
     const [weightGoal, setWeightGoal] = useState('');
     const [statusMessage, setStatusMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true); //loading state
-    const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
+    //const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
+    const userId = localStorage.getItem('userId') || '';
+    console.log('Retrieved userId from localStorage:', userId);
+
 
     //get the user data to populate the fields (if there is any):
     // i think how i set up userId should be fine line 19 and can delete line 26
     useEffect(() => {
 
         const fetchUserData = async () => {
-            // const token = localStorage.getItem('token');
             if(!userId) {
                 setStatusMessage('User not logged in');
                 setIsLoading(false);
                 return;
-            }else{}
-            try {
-                // may need the package to decode the token to get userID.
-                // Decode the token to get user info (userId)
-                // const decodedToken = jwt_decode<{ userId: string }>(token);
-                // const userId = localStorage.getItem('userId');
-                // we dont need this line bc of line 19, okay, i think the error earlier was the userId in the [] at end
-
-                const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
-                    method: 'GET',
-                    headers: {
-                        //'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    // setUserId(data._id); // Save the user's ID
-
-                    // Population:
-                    setFirstName(data.firstName || '');
-                    setLastName(data.lastName || '');
-                    setAge(data.age || '');
-                    setWeight(data.weight || '');
-                    setSex(data.sex || '');
-                    setHeightFt(data.feet || '');
-                    setHeightInches(data.inches || '');
-                    setActivityLevel(data.activityLevel || '');
-                    setWeightGoal(data.weightGoal || '');
-                } else {
-                    setStatusMessage('Enter information for calculation');
-                }
-            }catch(error){
-                setStatusMessage('Failed to fetch user profile.');
-                console.error(error);
-            }finally {
-                setIsLoading(false); // Set loading to false once data is fetched or if there's an error
             }
+                try {
+                    // may need the package to decode the token to get userID.
+                    // Decode the token to get user info (userId)
+                    // const decodedToken = jwt_decode<{ userId: string }>(token);
+                    // const userId = localStorage.getItem('userId');
+                    // we dont need this line bc of line 19, okay, i think the error earlier was the userId in the [] at end
+
+                    const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            //'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        // setUserId(data._id); // Save the user's ID
+
+                        // Population:
+                        setFirstName(data.firstName || '');
+                        setLastName(data.lastName || '');
+                        setAge(data.age || '');
+                        setWeight(data.weight || '');
+                        setSex(data.sex || '');
+                        setHeightFt(data.feet || '');
+                        setHeightInches(data.inches || '');
+                        setActivityLevel(data.activityLevel || '');
+                        setWeightGoal(data.weightGoal || '');
+                    } else {
+                        setStatusMessage('Enter information for calculation');
+                    }
+                } catch (error) {
+                    setStatusMessage('Failed to fetch user profile.');
+                    console.error(error);
+                } finally {
+                    setIsLoading(false); // Set loading to false once data is fetched or if there's an error
+                }
         };
 
-        fetchUserData(); // idk if this line is gonna give us a problem, i had to ask chatgpt on that
-        //said ir shouldnt matter
-    }, []);
+        fetchUserData();
+    }, [userId]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log('User ID:', userId);
 
         //conv to json:
         const profileData = {
@@ -86,7 +88,7 @@ function UserProfile() {
             feet: Number(heightFt),
             inches: Number(heightInches),
             activityLevel: activityLevel.toUpperCase(), // Match backend enum
-            weightGoal: weightGoal.toUpperCase(),
+            weightGoal: Number(weightGoal),
             // firstName,
             // lastName,
             // age,
@@ -116,6 +118,8 @@ function UserProfile() {
                 },
                 body: JSON.stringify(profileData),
             });
+            console.log('Response status:', response.status);
+            console.log('Response body:', await response.text());
             if (response.ok) {
                 setStatusMessage('Profile saved successfully!');
             } else {
@@ -152,7 +156,7 @@ function UserProfile() {
                     onChange={(e) => setLastName(e.target.value)}
                 />
 
-                <label>Age (lbs)</label>
+                <label>Age (years)</label>
                 <input
                     type="text"
                     className="user-profile-input"
@@ -226,17 +230,15 @@ function UserProfile() {
                     <option value="high">High: &gt;10,000 steps/day</option>
                 </select>
 
-                <label>Weight Goal</label>
-                <select
-                    className="user-profile-select"
+                <label>Weight Goal(lbs)</label>
+                <input
+                    type="number"
+                    className="user-profile-input"
+                    placeholder="Enter Weight Goal (l"
                     value={weightGoal}
                     onChange={(e) => setWeightGoal(e.target.value)}
                 >
-                    <option value="">Weight Goal</option>
-                    <option value="lose">Lose Weight</option>
-                    <option value="maintain">Maintain Weight</option>
-                    <option value="gain">Gain Weight</option>
-                </select>
+                </input>
 
                 <button type="submit" className="save-button">Save Changes</button>
             </form>
