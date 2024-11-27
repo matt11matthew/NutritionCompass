@@ -226,7 +226,7 @@ function UserProfile() {
                 >
                     <option value="">Activity Level</option>
                     <option value="low">Low: &lt;7,500 steps/day</option>
-                    <option value="moderate">Moderate: 7,500–9,999 steps/day</option>
+                    <option value="medium">Medium: 7,500–9,999 steps/day</option>
                     <option value="high">High: &gt;10,000 steps/day</option>
                 </select>
 
