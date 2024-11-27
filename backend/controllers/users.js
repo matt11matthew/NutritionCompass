@@ -69,9 +69,6 @@ const updateUser = async (req, res) => {
     // Update fields directly
     Object.keys(updates).forEach((key) => {
       user[key] = updates[key];
-      console.log("Key:", key);
-      console.log("User Key:", user[key]);
-      console.log("Updates Key:", updates[key]);
     });
 
 
