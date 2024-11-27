@@ -28,44 +28,45 @@ function UserProfile() {
                 setStatusMessage('User not logged in');
                 setIsLoading(false);
                 return;
-            }else{}
-            try {
-                // may need the package to decode the token to get userID.
-                // Decode the token to get user info (userId)
-                // const decodedToken = jwt_decode<{ userId: string }>(token);
-                // const userId = localStorage.getItem('userId');
-                // we dont need this line bc of line 19, okay, i think the error earlier was the userId in the [] at end
+            }else {
+                try {
+                    // may need the package to decode the token to get userID.
+                    // Decode the token to get user info (userId)
+                    // const decodedToken = jwt_decode<{ userId: string }>(token);
+                    // const userId = localStorage.getItem('userId');
+                    // we dont need this line bc of line 19, okay, i think the error earlier was the userId in the [] at end
 
-                const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
-                    method: 'GET',
-                    headers: {
-                        //'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
+                    const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            //'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    // setUserId(data._id); // Save the user's ID
+                    if (response.ok) {
+                        const data = await response.json();
+                        // setUserId(data._id); // Save the user's ID
 
-                    // Population:
-                    setFirstName(data.firstName || '');
-                    setLastName(data.lastName || '');
-                    setAge(data.age || '');
-                    setWeight(data.weight || '');
-                    setSex(data.sex || '');
-                    setHeightFt(data.feet || '');
-                    setHeightInches(data.inches || '');
-                    setActivityLevel(data.activityLevel || '');
-                    setWeightGoal(data.weightGoal || '');
-                } else {
-                    setStatusMessage('Enter information for calculation');
+                        // Population:
+                        setFirstName(data.firstName || '');
+                        setLastName(data.lastName || '');
+                        setAge(data.age || '');
+                        setWeight(data.weight || '');
+                        setSex(data.sex || '');
+                        setHeightFt(data.feet || '');
+                        setHeightInches(data.inches || '');
+                        setActivityLevel(data.activityLevel || '');
+                        setWeightGoal(data.weightGoal || '');
+                    } else {
+                        setStatusMessage('Enter information for calculation');
+                    }
+                } catch (error) {
+                    setStatusMessage('Failed to fetch user profile.');
+                    console.error(error);
+                } finally {
+                    setIsLoading(false); // Set loading to false once data is fetched or if there's an error
                 }
-            }catch(error){
-                setStatusMessage('Failed to fetch user profile.');
-                console.error(error);
-            }finally {
-                setIsLoading(false); // Set loading to false once data is fetched or if there's an error
             }
         };
 
