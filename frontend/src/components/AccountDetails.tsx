@@ -76,35 +76,6 @@ function AccountDetails() {
                     Account Details
                 </Typography>
 
-                <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <TextField
-                            className="custom-textfield"
-                            id="FirstName"
-                            placeholder="First Name"
-                            type="name"
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            className="custom-textfield"
-                            id="LastName"
-                            placeholder="Last Name"
-                            type="name"
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                        />
-                    </Grid>
-                </Grid>
-
                 <TextField
                     className="custom-textfield"
                     id="Email"
