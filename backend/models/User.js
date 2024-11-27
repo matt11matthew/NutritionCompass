@@ -27,7 +27,11 @@ const UserSchema = new Schema({
     type: Number,
     default: 0,
   },
-  height: {
+  feet: {
+    type: Number,
+    default: 0,
+  },
+  inches: {
     type: Number,
     default: 0,
   },

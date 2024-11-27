@@ -1,12 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import './UserProfile.css';
-import { useNavigate } from 'react-router-dom';
 import {Simulate} from "react-dom/test-utils";
-// import jwt_decode from 'jwt-decode'; may need to insall this package
 import error = Simulate.error;
 
 function UserProfile() {
-    const navigate = useNavigate();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -19,41 +16,37 @@ function UserProfile() {
     const [weightGoal, setWeightGoal] = useState('');
     const [statusMessage, setStatusMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true); //loading state
-    const [userId, setUserId] = useState('');
+    const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
 
     //get the user data to populate the fields (if there is any):
+    // i think how i set up userId should be fine line 19 and can delete line 26
     useEffect(() => {
 
         const fetchUserData = async () => {
-            const token = localStorage.getItem('token');
-            if(!token) {
+            // const token = localStorage.getItem('token');
+            if(!userId) {
                 setStatusMessage('User not logged in');
                 setIsLoading(false);
                 return;
-            }
+            }else{}
             try {
                 // may need the package to decode the token to get userID.
-                // // Decode the token to get user info (userId)
+                // Decode the token to get user info (userId)
                 // const decodedToken = jwt_decode<{ userId: string }>(token);
-                // const userId = decodedToken?.userId;
+                // const userId = localStorage.getItem('userId');
+                // we dont need this line bc of line 19, okay, i think the error earlier was the userId in the [] at end
 
-                // if (!userId) {
-                //     setStatusMessage('No user ID found in token');
-                //     setIsLoading(false);
-                //     return;
-                // }
-
-                const response = await fetch(`http://localhost:3000/users/${userId}`, {
+                const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        //'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    setUserId(data._id); // Save the user's ID
+                    // setUserId(data._id); // Save the user's ID
 
                     // Population:
                     setFirstName(data.firstName || '');
@@ -61,8 +54,8 @@ function UserProfile() {
                     setAge(data.age || '');
                     setWeight(data.weight || '');
                     setSex(data.sex || '');
-                    setHeightFt(data.height && data.height.split("'")[0] || '');
-                    setHeightInches(data.height && data.height.split("'")[1] || '');
+                    setHeightFt(data.feet || '');
+                    setHeightInches(data.inches || '');
                     setActivityLevel(data.activityLevel || '');
                     setWeightGoal(data.weightGoal || '');
                 } else {
@@ -76,7 +69,8 @@ function UserProfile() {
             }
         };
 
-        fetchUserData();
+        fetchUserData(); // idk if this line is gonna give us a problem, i had to ask chatgpt on that
+        //said ir shouldnt matter
     }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,26 +80,38 @@ function UserProfile() {
         const profileData = {
             firstName,
             lastName,
-            age,
-            weight,
-            sex,
-            height: `${heightFt}'${heightInches}"`,
-            activityLevel,
-            weightGoal
+            age: Number(age), // Ensure age is sent as a number
+            weight: Number(weight), // Ensure weight is sent as a number
+            sex: sex.toUpperCase(), // Match backend enum for `sex`
+            feet: Number(heightFt),
+            inches: Number(heightInches),
+            activityLevel: activityLevel.toUpperCase(), // Match backend enum
+            weightGoal: weightGoal.toUpperCase(),
+            // firstName,
+            // lastName,
+            // age,
+            // weight,
+            // sex,
+            // feet: heightFt,
+            // inches: heightInches,
+            // activityLevel,
+            // weightGoal
         };
+
+        console.log(profileData);
 
         //im unfamiliar with the token system, so please review this GET.
         try{
-            const token = localStorage.getItem('token');
-            if(!token){
-                setStatusMessage('User not logged in');
-                return;
-            }
+            // const token = localStorage.getItem('userId');
+            // if(!token){
+            //     setStatusMessage('User not logged in');
+            //     return;
+            // }
 
-            const response = await fetch(`http://localhost:3000/users/${userId}`, {
+            const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    // 'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(profileData),

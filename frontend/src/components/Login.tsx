@@ -43,7 +43,7 @@ interface LoginProps {
                 if(data.ok) {
                     const json = await data.json();
                     setLoginResult("Login Successful");
-                    localStorage.setItem("token", json.data[0].token);
+                    localStorage.setItem("userId", json.data[0].userId);
                     onLogin();
                     navigate('/user-dashboard');
                 }
