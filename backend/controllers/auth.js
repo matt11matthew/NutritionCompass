@@ -161,63 +161,54 @@ const logout = async (req, res, next) => {
 };
 
 const reset = async (req, res, next) => {
-  //this ones big and i have no clue if it works - ahmed
   try {
-    // token checking
-    // first if statement makes sure the token exists, second checks if it is valid, third checks to make sure it applies to a user
-    if (!req.headers.authorization?.split(" ")[1]) {
-      return res
-        .status(401)
-        .json({ status: "failed", data: [], message: "no jwt access token" });
-    }
-    const decoded = verifyUserToken(req.headers.authorization?.split(" ")[1]);
-    if (!decoded) {
-      return res
-        .status(401)
-        .json({ status: "failed", data: [], message: "invalid token" });
-    }
-    const user = User.findById(decoded.id).select("+password"); // force select password
-    if (!(await user)) {
-      return res
-        .status(404)
-        .json({ status: "failed", data: [], message: "no user exists" });
-    }
+    // Ensure userId is provided
+    const { userId, newPassword, confirmNewPassword } = req.body;
 
-    // password checking
-    // first if statement checks for input of old and new passwords, second checks they arent the same (idk how user knows old password)
-    // ^ dennis: without email, not super sure how they could get their old password
-    const { oldPassword, newPassword } = req.body;
-    if (!oldPassword || !newPassword) {
+    if (!userId || !newPassword || !confirmNewPassword) {
       return res.status(400).json({
         status: "failed",
         data: [],
-        message: "missing password change",
-      });
-    }
-    // no need for compare.compare, it's already imported as compare
-    if (!(await compare(oldPassword, newPassword))) {
-      return res.status(401).json({
-        status: "failed",
-        data: [],
-        message: "invalid password change",
+        message: "UserId, newPassword, and confirmNewPassword are required.",
       });
     }
 
-    // actually changing password
+    // Ensure new passwords match
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({
+        status: "failed",
+        data: [],
+        message: "Passwords do not match.",
+      });
+    }
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "failed",
+        data: [],
+        message: "User not found.",
+      });
+    }
+
+    // Update the user's password
     user.password = newPassword;
     await user.save();
+
     return res.status(200).json({
       status: "success",
       data: [],
-      message: "completed password change",
+      message: "Password reset successfully.",
     });
-  } catch {
-    console.error(err); //debugging
+  } catch (error) {
+    console.error(error);
     return res
-      .status(500)
-      .json({ status: "failed", data: [], message: error.message });
+        .status(500)
+        .json({ status: "failed", data: [], message: error.message });
   }
 };
+
 
 module.exports = {
   register,

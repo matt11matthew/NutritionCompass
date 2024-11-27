@@ -62,15 +62,24 @@ router.post(
 
 /**
  * @route   POST /auth/reset
- * @desc    Reset a user password.
- * @requires JSON Web Token, New Password, Old Password
+ * @desc    Reset a user password using userId.
+ * @requires userId, newPassword, confirmNewPassword
  * @optional None
  * @access  Public
  */
 router.post(
     "/reset",
-    check("email").isEmail().normalizeEmail(),
-    authUserToken,
-    reset); // not implemented yet
+    check("userId").notEmpty().withMessage("UserId is required"),
+    check("newPassword")
+        .notEmpty()
+        .isLength({ min: 8 })
+        .withMessage("Password must be at least 8 characters long"),
+    check("confirmNewPassword")
+        .notEmpty()
+        .withMessage("Confirm password field is required"),
+    reset
+);
+
+
 
 module.exports = router;

@@ -74,32 +74,33 @@ function AccountDetails() {
             return;
         }
 
-        const updatedData = {
-            firstName,
-            lastName,
-            email,
+        // Data for resetting the password
+        const passwordResetData = {
+            userId,
             newPassword: resetPassword,
+            confirmNewPassword: confirmResetPassword,
         };
 
-        console.log('Updating user data:', updatedData);
-
         try {
-            const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
-                method: 'PUT',
+            // Call the reset password endpoint
+            const response = await fetch('http://157.245.242.118:3001/auth/reset', {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedData),
+                body: JSON.stringify(passwordResetData),
             });
 
             if (response.ok) {
-                setStatusMessage('Account details updated successfully!');
+                setStatusMessage('Password reset successfully!');
             } else {
-                setStatusMessage('Failed to update account details');
+                const errorData = await response.json();
+                setStatusMessage(errorData.message || 'Failed to reset password');
             }
         } catch (error) {
-            console.error('Error updating account details:', error);
-            setStatusMessage('An error occurred while updating account details');
+            console.error('Error resetting password:', error);
+            setStatusMessage('An error occurred while resetting the password');
         }
     };
+
 
     return (
         <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
