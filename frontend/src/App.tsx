@@ -12,11 +12,19 @@ import SignUp from "./components/SignUp";
 import AccountDetailsPage from "./pages/AccountDetailsPage";
 
 function App() {
-    const[loggedIn, setLoggedIn] = React.useState(false);
+    const [loggedIn, setLoggedIn] = React.useState(() => {
+        return localStorage.getItem('loggedIn') === 'true';
+    });
 
-    const handleLogout = () =>setLoggedIn(false);
-    const handleLogin = () =>setLoggedIn(true);
+    const handleLogout = () => {
+        setLoggedIn(false);
+        localStorage.setItem('loggedIn', 'false');
+    };
 
+    const handleLogin = () => {
+        setLoggedIn(true);
+        localStorage.setItem('loggedIn', 'true');
+    };
     return (
         <Router>
             <div className="background-container">
