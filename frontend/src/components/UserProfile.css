@@ -61,3 +61,9 @@
     margin-top: 1vw;
     max-width: 150px;
 }
+
+.save-button:hover {
+    background-color: #d1bda2;
+    box-shadow: 0 2px 4px black;
+    /* background-color: #eae1d5;*/
+}

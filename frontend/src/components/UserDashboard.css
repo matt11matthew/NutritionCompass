@@ -121,14 +121,22 @@
 .add-meal-button:hover {
     /*background-color: #0F3874;*/
     color: #E2D5C4;
-    background-color: rgba(15, 56, 116, 0.9);
+    background-color: rgba(15, 56, 116, 0.6);
     box-shadow: 0 3px 7px #E2D5C4;
 }
 
 /* Meal Form */
 .meal-form {
     display: flex;
+    flex-direction: column;
     gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.meal-form-part{
+    display: flex;
+    gap: 20px;
     margin-bottom: 10px;
 }
 
@@ -149,9 +157,10 @@
 
 .meal-item {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background-color: #e6f0ff;
+    background-color: #E2D5C4;
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
@@ -167,19 +176,26 @@
 
 .meal-name {
     font-size: 1rem;
-    color: #0033cc;
+    font-weight: bold;
+    color: #0F3874;
 }
 
 .meal-calories {
     font-size: 1rem;
     font-weight: bold;
-    color: #0033cc;
+    color: #0F3874;
 }
 
 /* Dots Menu */
 .meal-options {
-    display: flex;
+    display: none;
     gap: 10px;
+    justify-content: right;
+    width: 100%;
+}
+
+.meal-options:active {
+    display: flex;
 }
 
 .dots-menu {

@@ -196,9 +196,9 @@ function UserProfile() {
                         onChange={(e) => setActivityLevel(e.target.value)}
                     >
                         <option value="">Activity Level</option>
-                        <option value="low">Low: &lt;7,500 steps/day</option>
-                        <option value="medium">Medium: 7,500–9,999 steps/day</option>
-                        <option value="high">High: &gt;10,000 steps/day</option>
+                        <option value="low">Low: exercise 1-3 times/week</option>
+                        <option value="medium">Medium: exercise 4-5 times/week</option>
+                        <option value="high">High: exercise 6-7 times/week</option>
                     </select>
 
                     <label>Weight Goal (lbs)</label>

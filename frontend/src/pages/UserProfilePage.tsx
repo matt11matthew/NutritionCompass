@@ -6,7 +6,7 @@ import PageTitle from '../components/PageTitle'; // Assuming you want the header
 function UserProfilePage() {
     return (
         <div>
-            <div className="page-container">
+            <div className="page-container" style={{height: '90vh'}}>
                 <UserProfile />
             </div>
         </div>

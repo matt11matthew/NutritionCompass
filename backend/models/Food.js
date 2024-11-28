@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose"); // database handling
 
 // Create a new schema for a Food
 const FoodSchema = new Schema({
-    userIds: {
+    userId: {
           type: Schema.Types.ObjectId,
           ref: "User",
           required: [true, "Foods must belong to a user."],

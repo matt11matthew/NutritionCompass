@@ -1,3 +1,15 @@
 .custom-textfield .MuiInputBase-input.Mui-disabled {
     color: black !important; /* Override disabled text color */
 }
+
+#SaveChanges{
+    background-color: #E2D5C4;
+    color: #0F3874;
+    border: 1px solid #092247;
+    font-weight: bold;
+}
+
+#SaveChanges:hover {
+    background-color: #d1bda2;
+    /* background-color: #eae1d5;*/
+}

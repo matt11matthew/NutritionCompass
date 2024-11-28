@@ -6,8 +6,9 @@ const router = express.Router();
 const {
     createFood,
     getFoods,
-    getFoodById,
+    getFoodByUserId,
     updateFood,
+    getFoodByFoodId,
     //addUserToFood,
     deleteFood,
 } = require("../controllers/foods");
@@ -31,22 +32,31 @@ router.post("/", createFood);
 router.get("/", getFoods);
 
 /**
- * @route   GET /foods/:id
- * @desc    Get a ood by ID.
- * @requires Food ID
+ * @route   GET /foods/:id/:foodId
+ * @desc    Get a food by User ID and Food ID.
+ * @requires User ID, Food ID
  * @optional None
  * @access  Public
  */
-router.get("/:id", getFoodById);
+router.get('/:id/:foodId', getFoodByFoodId);
 
 /**
- * @route   PUT /foods/:id
+ * @route   GET /foods/:id
+ * @desc    Get a ood by ID.
+ * @requires User ID
+ * @optional None
+ * @access  Public
+ */
+router.get("/:id", getFoodByUserId);
+
+/**
+ * @route   PUT /foods/:id/:foodId
  * @desc    Update a food by ID.
  * @requires Food ID
  * @optional Food Name, Calorie Number, Protein Number, Carbs Number, Fat Number
  * @access  Public
  */
-router.put("/:id", updateFood);
+router.put("/:id/:foodId", updateFood);
 
 /**
  * @route   PUT /foods/:id/addUser

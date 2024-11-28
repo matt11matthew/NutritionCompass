@@ -62,7 +62,28 @@ html, body {
 .nav-link {
     color: #e2d5c4 !important;
 }
-
+.nav-link:visited {
+    color: #e2d5c4 !important;
+}
 .navbar-toggler {
     border: #e2d5c4 solid 1px !important;
+}
+.navbar-toggler:visited {
+    border: #e2d5c4 solid 1px !important;
+}
+
+.logout-button{
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: 5px !important;
+    background-color: #E2D5C4 !important;
+    color: #0F3874 !important;
+    border-color: #0F3874 !important;
+    font-weight: bold !important;
+}
+
+.logout-button:hover{
+    color: #E2D5C4 !important;
+    background-color: rgba(15, 56, 116, 0.6) !important;
+    box-shadow: 0 3px 7px #E2D5C4 !important;
 }

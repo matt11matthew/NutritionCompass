@@ -11,9 +11,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const foodsRouter = require("./routes/foods");
-const calorieRouter = require("./routes/calories");
-
-// const foodRouter = require("./routes/foods"); // not yet implemented
+// const calorieRouter = require("./routes/calories"); //testing
 
 const app = express();
 
@@ -31,7 +29,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 app.use("/foods", foodsRouter);
-app.use("/users", calorieRouter);
+// app.use("/users", calorieRouter); //testing
 // app.use("/calories", calorieRouter); //if i use in the future -ahmed
 
 // connect to database
