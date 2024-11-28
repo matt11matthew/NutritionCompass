@@ -8,7 +8,7 @@ const {
     getFoods,
     getFoodById,
     updateFood,
-    addUserToFood,
+    //addUserToFood,
     deleteFood,
 } = require("../controllers/foods");
 
@@ -54,8 +54,9 @@ router.put("/:id", updateFood);
  * @requires Food ID, User ID
  * @optional None
  * @access  Public
+ * @status  This function is removed for now as we opted to have unique foods per user.
  */
-router.put("/:id/addUser", addUserToFood);
+// router.put("/:id/addUser", addUserToFood);
 
 /**
  * @route   DELETE /foods/:id

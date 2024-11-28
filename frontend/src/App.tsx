@@ -12,7 +12,7 @@ import SignUp from "./components/SignUp";
 import AccountDetailsPage from "./pages/AccountDetailsPage";
 
 function App() {
-    const[loggedIn, setLoggedIn] = React.useState(true);
+    const[loggedIn, setLoggedIn] = React.useState(false);
 
     const handleLogout = () =>setLoggedIn(false);
     const handleLogin = () =>setLoggedIn(true);

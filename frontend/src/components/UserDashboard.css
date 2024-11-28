@@ -115,12 +115,14 @@
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
 .add-meal-button:hover {
-    background-color: #0F3874;
-    color: #ffffff;
+    /*background-color: #0F3874;*/
+    color: #E2D5C4;
+    background-color: rgba(15, 56, 116, 0.9);
+    box-shadow: 0 3px 7px #E2D5C4;
 }
 
 /* Meal Form */

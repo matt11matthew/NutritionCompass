@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const Food = require("..models/Food");
+const Food = require("../models/Food");
 
 const ACTIVITY_LEVELS = { // for easier calculations
     LOW: 1.2,

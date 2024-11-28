@@ -103,7 +103,7 @@ function AccountDetails() {
 
 
     return (
-        <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
+        <div style={{ width: '100vw', height: '100vh', display: 'flex' /*, alignItems: 'center', justifyItems: 'center' */}}>
             <Box
                 className="boxDiv"
                 sx={{
