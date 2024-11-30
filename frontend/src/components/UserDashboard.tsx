@@ -1,110 +1,93 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./UserDashboard.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-/*import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';*/
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function UserDashboard() {
     const [meals, setMeals] = useState<
-        { id: string; name: string; calories: number; carbs: number; protein: number; fats: number; date: string }[]
+        { _id: string; name: string; calories: number; carbs: number; protein: number; fats: number; date: string }[]
     >([]);
     const [newMeal, setNewMeal] = useState({
-        id: "",
+        _id: "",
         name: "",
         calories: 0,
         carbs: 0,
         protein: 0,
         fats: 0,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split("T")[0],
     });
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [totals, setTotals] = useState({ calories: 0, carbs: 0, protein: 0, fats: 0 });
-    const userId = localStorage.getItem('userId') || '';
+    const userId = localStorage.getItem("userId") || "";
     const [activeMealIndex, setActiveMealIndex] = useState<number | null>(null);
 
     useEffect(() => {
-        if(userId) fetchMeals();
+        if (userId) fetchMeals();
     }, [userId]);
 
-
-    //gets all the meals associated with a user:
+    // Fetch all meals associated with a user
     const fetchMeals = async () => {
         try {
-            const response = await fetch(`http://157.245.242.118:3001/foods?userId=${userId}`);
+            const response = await fetch(`http://157.245.242.118:3001/foods/${userId}`);
             if (!response.ok) throw new Error("Failed to fetch meals");
             const data = await response.json();
-            setMeals(data);
-            fetchTotals(data); // Pass fetched meals to calculate totals
+            setMeals(data.data); // Adjusted to match backend's response format
+            fetchTotals(data.data); // Calculate totals
         } catch (error) {
             console.error("Error fetching meals:", error);
         }
     };
 
-    //so the parameter isn't so long typing is gonna be here.
-    type Meal = {
-        id: string;
-        name: string;
-        calories: number;
-        macros: {
-            carbs: number;
-            protein: number;
-            fat: number;
-        };
-        date: string;
-    };
-
-    //doesn't use the api, since we are able to get all meals for the user, and the api is only for calories.
-    const fetchTotals = (meals: Meal[]) => {
-        // Group meals by date and sum the macros for each date
-        const groupedByDate = meals.reduce((acc: { [date: string]: { calories: number, carbs: number, protein: number, fats: number } }, meal: Meal) => {
-            const date = meal.date.split('T')[0]; // Extract the date
+    // Calculate totals for the day
+    const fetchTotals = (meals: typeof newMeal[]) => {
+        const groupedByDate = meals.reduce((acc, meal) => {
+            const date = meal.date.split("T")[0];
             if (!acc[date]) acc[date] = { calories: 0, carbs: 0, protein: 0, fats: 0 };
             acc[date].calories += meal.calories;
-            acc[date].carbs += meal.macros.carbs;
-            acc[date].protein += meal.macros.protein;
-            acc[date].fats += meal.macros.fat;
+            acc[date].carbs += meal.carbs;
+            acc[date].protein += meal.protein;
+            acc[date].fats += meal.fats;
             return acc;
-        }, {});
+        }, {} as { [date: string]: typeof totals });
 
-        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split("T")[0];
         setTotals(groupedByDate[today] || { calories: 0, carbs: 0, protein: 0, fats: 0 });
     };
 
+    // Add a new meal
     const addMeal = async () => {
-        if (!newMeal.name || newMeal.calories <= 0 || newMeal.carbs < 0 || newMeal.protein < 0 || newMeal.fats < 0) {
+        if (!newMeal.name || newMeal.calories <= 0) {
             alert("Please enter valid inputs.");
             return;
         }
 
-        const mealData = { ...newMeal };
+        const mealData = { ...newMeal, userId };
 
         try {
             const response = await fetch(`http://157.245.242.118:3001/foods`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(mealData),
             });
 
             if (!response.ok) throw new Error("Failed to add meal");
 
             const addedMeal = await response.json();
-            setMeals([...meals, addedMeal]); // Add the meal returned from the backend (which includes the id)
-            setNewMeal({ id: "", name: "", calories: 0, carbs: 0, protein: 0, fats: 0,date: new Date().toISOString().split('T')[0] }); // Reset after adding
-            fetchTotals([...meals, addedMeal]); // Refresh totals after adding a meal
+            setMeals([...meals, addedMeal.data]); // Updated to match backend response
+            setNewMeal({ _id: "", name: "", calories: 0, carbs: 0, protein: 0, fats: 0, date: new Date().toISOString().split("T")[0] });
+            fetchTotals([...meals, addedMeal.data]); // Refresh totals
         } catch (error) {
             console.error("Error adding meal:", error);
             alert("Failed to add meal. Please try again.");
         }
     };
 
+    // Update an existing meal
     const updateMeal = async (index: number) => {
         const mealToUpdate = meals[index];
-        const updatedMeal = { ...mealToUpdate, ...newMeal }; // Merge the current meal with the updated data
+        const updatedMeal = { ...mealToUpdate, ...newMeal };
 
         try {
-            const response = await fetch(`http://157.245.242.118:3001/foods/${updatedMeal.id}`, {
+            const response = await fetch(`http://157.245.242.118:3001/foods/${userId}/${updatedMeal._id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedMeal),
@@ -116,9 +99,8 @@ function UserDashboard() {
             updatedMeals[index] = updatedMeal;
             setMeals(updatedMeals);
             setEditingIndex(null);
-            setNewMeal({ id: "", name: "", calories: 0, carbs: 0, protein: 0, fats: 0,date: new Date().toISOString().split('T')[0] }); // Reset after updating
-            //fetchTotals(updatedMeals as Meal[]); // Refresh totals after updating a meal
-            fetchMeals();
+            setNewMeal({ _id: "", name: "", calories: 0, carbs: 0, protein: 0, fats: 0, date: new Date().toISOString().split("T")[0] });
+            fetchTotals(updatedMeals);
         } catch (error) {
             console.error("Error updating meal:", error);
         }
@@ -129,14 +111,15 @@ function UserDashboard() {
         const mealToDelete = meals[index];
 
         try {
-            const response = await fetch(`http://157.245.242.118:3001/foods/${mealToDelete.id}`, {
+            const response = await fetch(`http://157.245.242.118:3001/foods/${userId}/${mealToDelete._id}`, {
                 method: "DELETE",
             });
 
             if (!response.ok) throw new Error("Failed to delete meal");
 
-            setMeals(meals.filter((_, i) => i !== index)); // Remove meal from frontend list
-            fetchMeals(); // Refresh totals after deleting a meal
+            const updatedMeals = meals.filter((_, i) => i !== index);
+            setMeals(updatedMeals);
+            fetchTotals(updatedMeals);
         } catch (error) {
             console.error("Error deleting meal:", error);
         }
@@ -145,16 +128,13 @@ function UserDashboard() {
     // Edit an existing meal
     const editMeal = (index: number) => {
         setEditingIndex(index);
-        const { id, name, calories, carbs, protein, fats, date } = meals[index];
-        setNewMeal({ id, name, calories, carbs, protein, fats, date }); // Include the id when editing
+        const { _id, name, calories, carbs, protein, fats, date } = meals[index];
+        setNewMeal({ _id, name, calories, carbs, protein, fats, date });
     };
 
-
-    //Shows/hides macros, edit, delete button
-    const show_meal_options = (index: number) => {
+    const showMealOptions = (index: number) => {
         setActiveMealIndex(activeMealIndex === index ? null : index);
-
-    }
+    };
 
     return (
         <div className="dashboard-container">
@@ -162,20 +142,20 @@ function UserDashboard() {
                 {/* Left Section - Macros */}
                 <div className="macros-container">
                     <h1 className="dashboard-title">User Dashboard</h1>
-                    <div id='macros-content'>
+                    <div id="macros-content">
                         <div className="macros-circle">
                             <h2>Macros</h2>
-                            <p>Carbs: #/# grams</p>
-                            <p>Protein: #/# grams</p>
-                            <p>Fats: #/# grams</p>
+                            <p>Carbs: {totals.carbs} grams</p>
+                            <p>Protein: {totals.protein} grams</p>
+                            <p>Fats: {totals.fats} grams</p>
                         </div>
-                        <div className="calories-summary">Calories: Eaten/Allowed</div>
+                        <div className="calories-summary">Calories: {totals.calories} cal</div>
                     </div>
                 </div>
 
                 {/* Right Section - Meals */}
                 <div className="meals-container">
-                <div className="meals-header">
+                    <div className="meals-header">
                         <h2>Today's Meals</h2>
                         <button className="add-meal-button" onClick={addMeal}>
                             {editingIndex !== null ? "Update Meal" : "Add New Meal"}
@@ -187,21 +167,16 @@ function UserDashboard() {
                                 type="text"
                                 placeholder="Meal name"
                                 value={newMeal.name}
-                                onChange={(e) =>
-                                    setNewMeal({...newMeal, name: e.target.value})
-                                }
+                                onChange={(e) => setNewMeal({ ...newMeal, name: e.target.value })}
                                 className="meal-input"
                             />
                             <input
                                 type="number"
                                 placeholder="Calories"
                                 value={newMeal.calories}
-                                onChange={(e) =>
-                                    setNewMeal({...newMeal, calories: parseInt(e.target.value) || 0})
-                                }
+                                onChange={(e) => setNewMeal({ ...newMeal, calories: parseInt(e.target.value) || 0 })}
                                 className="meal-input"
                             />
-
                         </div>
 
                         <div className="meal-form-part">
@@ -209,51 +184,38 @@ function UserDashboard() {
                                 type="number"
                                 placeholder="Carbs (g)"
                                 value={newMeal.carbs}
-                                onChange={(e) =>
-                                    setNewMeal({...newMeal, carbs: parseInt(e.target.value) || 0})
-                                }
+                                onChange={(e) => setNewMeal({ ...newMeal, carbs: parseInt(e.target.value) || 0 })}
                                 className="meal-input"
                             />
                             <input
                                 type="number"
                                 placeholder="Protein (g)"
                                 value={newMeal.protein}
-                                onChange={(e) =>
-                                    setNewMeal({...newMeal, protein: parseInt(e.target.value) || 0})
-                                }
+                                onChange={(e) => setNewMeal({ ...newMeal, protein: parseInt(e.target.value) || 0 })}
                                 className="meal-input"
                             />
                             <input
                                 type="number"
                                 placeholder="Fats (g)"
                                 value={newMeal.fats}
-                                onChange={(e) =>
-                                    setNewMeal({...newMeal, fats: parseInt(e.target.value) || 0})
-                                }
+                                onChange={(e) => setNewMeal({ ...newMeal, fats: parseInt(e.target.value) || 0 })}
                                 className="meal-input"
                             />
                         </div>
-
                     </div>
                     <ul className="meals-list">
-                        {Array.isArray(meals) && meals.map((meal, index) => (
-                            <li className="meal-item" key={index}>
-                                <button onClick={() => show_meal_options(index)}> Show options</button>
+                        {meals.map((meal, index) => (
+                            <li key={index} className="meal-item">
+                                <button onClick={() => showMealOptions(index)}>Show Options</button>
                                 <div className="meal-info">
                                     <span className="meal-name">{meal.name}</span>
                                     <span className="meal-calories">{meal.calories} cal</span>
                                 </div>
-                                <div className={`meal-options ${activeMealIndex === index ? 'active' : ''}`}>
-                                    <span
-                                        className="dots-menu"
-                                        onClick={() => editMeal(index)}
-                                    >
+                                <div className={`meal-options ${activeMealIndex === index ? "active" : ""}`}>
+                                    <span className="dots-menu" onClick={() => editMeal(index)}>
                                         Edit
                                     </span>
-                                    <span
-                                        className="dots-menu"
-                                        onClick={() => deleteMeal(index)}
-                                    >
+                                    <span className="dots-menu" onClick={() => deleteMeal(index)}>
                                         Delete
                                     </span>
                                 </div>
@@ -267,24 +229,3 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
-
-
-/*<div className="meal-info">
-    <span className="meal-name">{meal.name}</span>
-    <span className="meal-calories">{meal.calories} cal</span>
-</div>
-<div className="meal-options">
-    <span
-        className="dots-menu"
-        onClick={() => editMeal(index)}
-    >
-        Edit
-    </span>
-    <span
-        className="dots-menu"
-        onClick={() => deleteMeal(index)}
-    >
-        Delete
-    </span>
-</div>
-*/
