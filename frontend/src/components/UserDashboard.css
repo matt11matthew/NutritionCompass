@@ -106,6 +106,16 @@
     color: #E2D5C4;
 }
 
+/*Remove the arrows for a number type input*/
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"]{
+    -moz-appearance: none;
+}
+
 .add-meal-button {
     background-color: #E2D5C4;
     color: #0F3874;
@@ -187,15 +197,33 @@
 }
 
 /* Dots Menu */
-.meal-options {
+.meal-more-info {
     display: none;
+}
+
+.meal-more-info-active {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     justify-content: right;
     width: 100%;
 }
 
-.meal-options:active {
+.meal-options{
     display: flex;
+    gap: 10px;
+    justify-content: right;
+    width: 100%;
+}
+
+.meal-macros {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.meal-macro-item{
+    padding: 2px;
 }
 
 .dots-menu {

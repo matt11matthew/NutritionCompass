@@ -30,12 +30,25 @@ function UserDashboard() {
             const response = await fetch(`http://157.245.242.118:3001/foods/${userId}`);
             if (!response.ok) throw new Error("Failed to fetch meals");
             const data = await response.json();
-            setMeals(data.data); // Adjusted to match backend's response format
-            fetchTotals(data.data); // Calculate totals
+
+            // Ensure macros are parsed correctly
+            const mealsWithMacros = data.data.map((meal: any) => ({
+                _id: meal._id,
+                name: meal.name,
+                calories: meal.calories,
+                carbs: meal.macros.carbs,
+                protein: meal.macros.protein,
+                fats: meal.macros.fat,
+                date: meal.date,
+            }));
+
+            setMeals(mealsWithMacros); // Update meals state
+            fetchTotals(mealsWithMacros); // Calculate totals
         } catch (error) {
             console.error("Error fetching meals:", error);
         }
     };
+
 
     // Calculate totals for the day
     const fetchTotals = (meals: typeof newMeal[]) => {
@@ -60,26 +73,69 @@ function UserDashboard() {
             return;
         }
 
-        const mealData = { ...newMeal, userId };
+        // Construct the payload to match the backend's expectations
+        const mealData = {
+            userId: userId, // Include the userId in the payload
+            name: newMeal.name,
+            calories: newMeal.calories,
+            macros: {
+                carbs: newMeal.carbs,
+                protein: newMeal.protein,
+                fat: newMeal.fats,
+            },
+            description: "Meal added from UI", // Optional description
+            mealType: "SNACK", // Optional meal type
+            date: newMeal.date,
+        };
 
         try {
             const response = await fetch(`http://157.245.242.118:3001/foods`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(mealData),
+                body: JSON.stringify(mealData), // Send the correct payload
             });
 
-            if (!response.ok) throw new Error("Failed to add meal");
+            if (!response.ok) {
+                const errorData = await response.json(); // Log backend error response for debugging
+                console.error("Error response from backend:", errorData);
+                throw new Error("Failed to add meal");
+            }
 
             const addedMeal = await response.json();
-            setMeals([...meals, addedMeal.data]); // Updated to match backend response
-            setNewMeal({ _id: "", name: "", calories: 0, carbs: 0, protein: 0, fats: 0, date: new Date().toISOString().split("T")[0] });
-            fetchTotals([...meals, addedMeal.data]); // Refresh totals
+
+            // Add the newly created meal to the frontend state
+            const newMeals = [
+                ...meals,
+                {
+                    _id: addedMeal.data._id, // Backend-generated ID
+                    name: mealData.name,
+                    calories: mealData.calories,
+                    carbs: mealData.macros.carbs,
+                    protein: mealData.macros.protein,
+                    fats: mealData.macros.fat,
+                    date: mealData.date,
+                },
+            ];
+
+            setMeals(newMeals);
+            setNewMeal({
+                _id: "",
+                name: "",
+                calories: 0,
+                carbs: 0,
+                protein: 0,
+                fats: 0,
+                date: new Date().toISOString().split("T")[0],
+            }); // Reset the form
+            fetchTotals(newMeals); // Refresh totals
         } catch (error) {
             console.error("Error adding meal:", error);
             alert("Failed to add meal. Please try again.");
         }
     };
+
+
+
 
     // Update an existing meal
     const updateMeal = async (index: number) => {
@@ -90,7 +146,16 @@ function UserDashboard() {
             const response = await fetch(`http://157.245.242.118:3001/foods/${userId}/${updatedMeal._id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedMeal),
+                body: JSON.stringify({
+                    name: updatedMeal.name,
+                    calories: updatedMeal.calories,
+                    macros: {
+                        carbs: updatedMeal.carbs,
+                        protein: updatedMeal.protein,
+                        fat: updatedMeal.fats,
+                    },
+                    date: updatedMeal.date,
+                }),
             });
 
             if (!response.ok) throw new Error("Failed to update meal");
@@ -105,6 +170,7 @@ function UserDashboard() {
             console.error("Error updating meal:", error);
         }
     };
+
 
     // Delete a meal
     const deleteMeal = async (index: number) => {
@@ -124,6 +190,7 @@ function UserDashboard() {
             console.error("Error deleting meal:", error);
         }
     };
+
 
     // Edit an existing meal
     const editMeal = (index: number) => {
@@ -157,7 +224,9 @@ function UserDashboard() {
                 <div className="meals-container">
                     <div className="meals-header">
                         <h2>Today's Meals</h2>
-                        <button className="add-meal-button" onClick={addMeal}>
+                        <button className="add-meal-button"
+                                onClick={editingIndex !== null ? () => updateMeal(editingIndex) : addMeal}
+                        >
                             {editingIndex !== null ? "Update Meal" : "Add New Meal"}
                         </button>
                     </div>
@@ -206,18 +275,26 @@ function UserDashboard() {
                     <ul className="meals-list">
                         {meals.map((meal, index) => (
                             <li key={index} className="meal-item">
-                                <button onClick={() => showMealOptions(index)}>Show Options</button>
                                 <div className="meal-info">
+                                    <button onClick={() => showMealOptions(index)}>Show Options</button>
                                     <span className="meal-name">{meal.name}</span>
                                     <span className="meal-calories">{meal.calories} cal</span>
                                 </div>
-                                <div className={`meal-options ${activeMealIndex === index ? "active" : ""}`}>
-                                    <span className="dots-menu" onClick={() => editMeal(index)}>
+                                <div className={`meal-more-info${activeMealIndex === index ? "-active" : ""}`}>
+                                    <div className="meal-macros">
+                                        <span className="meal-macros-item">Carbs: {meal.carbs} g</span>
+                                        <span className="meal-macros-item">Proteins: {meal.protein} g</span>
+                                        <span className="meal-macros-item">Fats: {meal.fats} g</span>
+                                    </div>
+
+                                    <div className="meal-options">
+                                        <span className="dots-menu" onClick={() => editMeal(index)}>
                                         Edit
                                     </span>
-                                    <span className="dots-menu" onClick={() => deleteMeal(index)}>
+                                        <span className="dots-menu" onClick={() => deleteMeal(index)}>
                                         Delete
                                     </span>
+                                    </div>
                                 </div>
                             </li>
                         ))}

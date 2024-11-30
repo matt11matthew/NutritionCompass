@@ -147,28 +147,36 @@ const deleteUser = async (req, res, next) => {
  * @optional None
  * @access  Public
  */
-const getCalorieStats = async (req, res) => { // returns both kcal limits and consumed num
+const getCalorieStats = async (req, res) => {
   try {
     const userId = req.params.id;
+
+    // Validate user existence
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({status: "error", message: "User not found."});
+      return res.status(404).json({ status: "error", message: "User not found." });
     }
 
-    const foods = await Food.find({ userIds: userId});
-    const caloriesConsumed = foods.reduce((sum, food) => sum + food.calories, 0);
+    // Find foods associated with the user
+    const foods = await Food.find({ userId }); // Use correct field name
 
+    // Calculate total calories consumed
+    const caloriesConsumed = foods.reduce((sum, food) => sum + (food.calories || 0), 0);
+
+    // Calculate calorie limits
     const calorieLimits = calculateBMR(user);
 
+    // Return response
     res.status(200).json({
       status: "success",
-      data: {calorieLimits, caloriesConsumed},
+      data: { calorieLimits, caloriesConsumed },
       message: "Calories calculated successfully.",
     });
   } catch (error) {
-    res.status(500).json({status: "error", message: error.message});
+    res.status(500).json({ status: "error", message: error.message });
   }
 };
+
 
 /**
  * @route   GET /users/:id/caloriesLimits
@@ -207,7 +215,7 @@ const calculateCalorieLimits = async (req, res) => { // returns only the calcula
 const getCaloriesConsumed = async (req, res, next) => { // calculates and returns only the number of consumed calories
   try{
     const userId = req.params.id;
-    const foods = await Food.find({userIds: userId});
+    const foods = await Food.find({userId});
     const caloriesConsumed = foods.reduce((sum, food) => sum + food.calories, 0);
 
     res.status(200).json({
