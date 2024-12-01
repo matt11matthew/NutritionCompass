@@ -112,9 +112,6 @@ interface LoginProps {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <Typography>
-                    <a href='./login'>Forgot Password?</a>
-                </Typography>
                 <Button
 
                     id="loginButton"
