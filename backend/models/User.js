@@ -23,6 +23,10 @@ const UserSchema = new Schema({
     required: [true, "Users must have a password."],
     minLength: [8, "Password must be at least 8 characters long."],
   },
+  firstLogin: {
+    type: Boolean,
+    default: true, // Defaults to true for new users
+  },
   weight: {
     type: Number,
     default: 0,

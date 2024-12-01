@@ -197,7 +197,7 @@ const calculateCalorieLimits = async (req, res) => { // returns only the calcula
 
     res.status(200).json({
       status: "success",
-      data: calorieLimits,
+      data: { calorieLimit: calorieLimits.calorieLimit },
       message: "Calorie limits calculated successfully.",
     });
   } catch (error) {

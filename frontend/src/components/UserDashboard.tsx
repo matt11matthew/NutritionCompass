@@ -211,7 +211,7 @@ function UserDashboard() {
 
     const getMaxCals = async (userId: string) => {
         try {
-            const response = await fetch('https://nc-api.matthewe.me/users/${userId}/caloriesLimits', {
+            const response = await fetch(`https://nc-api.matthewe.me/users/${userId}/caloriesLimits`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             });
@@ -221,15 +221,18 @@ function UserDashboard() {
             }
 
             const data = await response.json();
-            console.log("Fetched maxCalories from backend:", data);
+            console.log("Response data from backend:", data);
 
-            // Ensure you are accessing the correct field in the response
-            setMaxCalories(data.data.calorieLimits || 2000); // Fallback to default value
+            // Extract calorie limit
+            const calorieLimit = Math.round(data.data?.calorieLimit || 2000); // Round to nearest integer
+            setMaxCalories(calorieLimit);
+            console.log("Updated maxCalories:", calorieLimit);
         } catch (error) {
             console.error("Error fetching maxCalories:", error);
             alert("Failed to fetch max calories. Please try again later.");
         }
     };
+
 
 
 
@@ -265,7 +268,7 @@ function UserDashboard() {
                                         },
                                         text: {
                                             fill: '#0F3874',
-                                            fontSize: '14px',
+                                            fontSize: '50%',
                                             fontWeight: 'bold',
                                             lineHeight: '18px',
                                             textAlign: 'center',

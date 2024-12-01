@@ -119,6 +119,15 @@ const login = async (req, res, next) => {
     });
   }
 
+  // Check if it's the user's first login
+  const isFirstLogin = user.firstLogin;
+
+  // Update firstLogin to false for subsequent logins
+  if (isFirstLogin) {
+    user.firstLogin = false;
+    await user.save();
+  }
+
   // generate token and send to user
   // COOKIE HERE
   // SAVED AS "token"
@@ -134,7 +143,7 @@ const login = async (req, res, next) => {
   // currently sends back user's email, id, and JWT issued to them
   res.status(200).json({
     status: "success",
-    data: [{ email: user.email, _id: user._id, token: token }], // returns token too
+    data: [{ email: user.email, _id: user._id, firstLogin: isFirstLogin, token: token }], // returns token too
     message: "User logged in.",
   });
   res.end(); // just for safety

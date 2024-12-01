@@ -20,54 +20,54 @@ interface LoginProps {
          setEmailError("");
      }
 
-    const doLogin = async() => {
-        // event.preventDefault();\
-        if(!email || !password) {
-            setLoginResult("Email and password are required");
-            return;
-        }
+     const doLogin = async () => {
+         if (!email || !password) {
+             setLoginResult("Email and password are required");
+             return;
+         }
 
-        console.log(email);
-        console.log(password);
+         try {
+             const response = await fetch('https://nc-api.matthewe.me/auth/login', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify({ email, password })
+             });
 
-        try {
-            const response =  await fetch('https://nc-api.matthewe.me/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
+             if (response.ok) {
+                 const json = await response.json();
 
-            if (response.ok) {
-                const json = await response.json();
+                 // Assuming the backend provides userId and a firstLogin flag in the response
+                 const userId = json.data.userId || json.data[0]._id;
+                 const isFirstLogin = json.data[0]?.firstLogin; // Replace with actual field name if different
 
-                console.log('Response JSON:', json); // Debugging the response
+                 localStorage.setItem("userId", userId);
 
-                // Assuming backend returns json.data.userId as a single object
-                const userId = json.data.userId;
-                localStorage.setItem("userId", json.data[0]._id);
+                 setLoginResult("Login Successful");
+                 onLogin();
 
-                setLoginResult("Login Successful");
-                onLogin(); // Call parent or higher-level function if needed
-                navigate('/user-dashboard'); // Navigate to dashboard
-            }
-            else {
-                const error = await response.json();
-                console.error('Login failed:', error.message);
-                setLoginResult(error.message || "Login failed. Please try again.");
-            }
-
-
-        } catch (error) {
-            console.error('Error logging in:', error);
-            setLoginResult('An error occurred. Please try again.');
-        }
-
-    }
+                 if (isFirstLogin) {
+                     // Navigate to user profile for first-time login
+                     navigate('/userprofile');
+                 } else {
+                     // Navigate to user dashboard for regular login
+                     navigate('/user-dashboard');
+                 }
+             } else {
+                 const error = await response.json();
+                 console.error('Login failed:', error.message);
+                 setLoginResult(error.message || "Login failed. Please try again.");
+             }
+         } catch (error) {
+             console.error('Error logging in:', error);
+             setLoginResult('An error occurred. Please try again.');
+         }
+     };
 
 
-    return (
+
+     return (
         <div style={{width: "100vw", height: "90vh", display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
             <Box
                 className="boxDiv"
