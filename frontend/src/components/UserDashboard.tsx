@@ -32,19 +32,6 @@ function UserDashboard() {
         }
     }, [userId]);
 
-    //get max calories of the user:
-    const getMaxCals = async (userId: string) => {
-        try{
-            // should it be 'https://nc-api.matthewe.me/users/${userId}/calories`
-            const response = await fetch('https://nc-api.matthewe.me/users/${userId}/caloriesLimits')
-            if (!response.ok) throw new Error("Error with max cals");
-            const data = await response.json();
-            console.log(data);
-            setMaxCalories(data.calories)
-        }catch (error){
-            console.log(error);
-        }
-    }
 
     // Fetch all meals associated with a user
     const fetchMeals = async () => {
@@ -200,7 +187,7 @@ function UserDashboard() {
         console.log("meal index del:", index, mealToDelete);
 
         try {
-            const response = await fetch(`https://nc-api.matthewe.me/foods/${userId}/${mealToDelete._id}`, {
+            const response = await fetch(`https://nc-api.matthewe.me/foods/${mealToDelete._id}`, {
                 method: "DELETE",
             });
 
@@ -221,6 +208,32 @@ function UserDashboard() {
         const { _id, name, calories, carbs, protein, fats, date } = meals[index];
         setNewMeal({ _id, name, calories, carbs, protein, fats, date });
     };
+
+    const getMaxCals = async (userId: string) => {
+        try {
+            const response = await fetch('https://nc-api.matthewe.me/users/${userId}/caloriesLimits', {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch max calories: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log("Fetched maxCalories from backend:", data);
+
+            // Ensure you are accessing the correct field in the response
+            setMaxCalories(data.data.calorieLimits || 2000); // Fallback to default value
+        } catch (error) {
+            console.error("Error fetching maxCalories:", error);
+            alert("Failed to fetch max calories. Please try again later.");
+        }
+    };
+
+
+
+
 
     const showMealOptions = (index: number) => {
         console.log("Showing options for meal at index:", index);
@@ -296,7 +309,7 @@ function UserDashboard() {
                                 <input
                                     type="number"
                                     placeholder="Calories"
-                                    value={newMeal.calories}
+                                    value={newMeal.calories === 0 ? "" : newMeal.calories}
                                 onChange={(e) => setNewMeal({ ...newMeal, calories: parseInt(e.target.value) || 0 })}
                                 className="meal-input"
                             />
@@ -306,22 +319,23 @@ function UserDashboard() {
                             <input
                                 type="number"
                                 placeholder="Carbs (g)"
-                                value={newMeal.carbs}
+                                value={newMeal.carbs === 0 ? "" : newMeal.carbs}
                                 onChange={(e) => setNewMeal({...newMeal, carbs: parseInt(e.target.value) || 0})}
                                 className="meal-input"
                             />
                             <input
                                 type="number"
                                 placeholder="Protein (g)"
-                                value={newMeal.protein}
-                                onChange={(e) => setNewMeal({ ...newMeal, protein: parseInt(e.target.value) || 0 })}
+                                value={newMeal.protein === 0 ? "" : newMeal.protein} // Show "" when protein is 0
+                                onChange={(e) => setNewMeal({...newMeal, protein: parseInt(e.target.value) || 0})}
                                 className="meal-input"
                             />
+
                             <input
                                 type="number"
                                 placeholder="Fats (g)"
-                                value={newMeal.fats}
-                                onChange={(e) => setNewMeal({ ...newMeal, fats: parseInt(e.target.value) || 0 })}
+                                value={newMeal.fats === 0 ? "" : newMeal.fats}
+                                onChange={(e) => setNewMeal({...newMeal, fats: parseInt(e.target.value) || 0 })}
                                 className="meal-input"
                             />
                         </div>

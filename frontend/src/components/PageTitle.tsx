@@ -32,7 +32,7 @@ function PageTitle({ loggedIn, handleLogout }: PageTitleProps) {
                             <Nav.Link href="/account-details">Account Details</Nav.Link>
                             <Nav.Link href="/userprofile">User Profile</Nav.Link>
                             <Nav.Link href="/user-dashboard">User Dashboard</Nav.Link>
-                            <Nav.Link href="/food-list">Food List</Nav.Link>
+                            {/*<Nav.Link href="/food-list">Food List</Nav.Link>*/}
                             <Button className="logout-button" onClick={handleLogoutClick}>Logout</Button>
                         </Nav>
 
