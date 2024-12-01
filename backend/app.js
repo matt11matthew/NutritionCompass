@@ -17,7 +17,11 @@ const app = express();
 
 // set up environment and middleware
 require("dotenv").config(); // load environment variables
-app.use(cors()); // default Access-Control-Allow-Origin: *
+app.use(cors({
+  origin: "https://nc.matthewe.me", // Allow requests from your HTTPS frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // Allow cookies if required
+}));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,12 +40,19 @@ app.use("/foods", foodsRouter);
 const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("Connected to database.");
+    console.log("Connected to MongoDB:", process.env.MONGO_URI);
+
+    // Explicitly bind server to port 3001
+    app.listen(3001, "0.0.0.0", () => {
+      console.log("Server is running on http://localhost:${PORT}");
+    });
   } catch (err) {
-    console.error(err);
+    console.error("Error starting the backend:", err.message);
+    process.exit(1); // Exit process if server startup fails
   }
 };
 
 start();
+
 
 module.exports = app;

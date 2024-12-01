@@ -55,7 +55,7 @@ function SignUp() {
             try{
                 //api stuff:
                 // response will be the call
-                const response =  fetch('http://157.245.242.118:3001/auth/register', {
+                const response =  fetch('https://nc-api.matthewe.me/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

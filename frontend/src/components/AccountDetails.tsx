@@ -25,7 +25,7 @@ function AccountDetails() {
             }
 
             try {
-                const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
+                const response = await fetch(`https://nc-api.matthewe.me/users/${userId}`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                 });
@@ -83,7 +83,7 @@ function AccountDetails() {
 
         try {
             // Call the reset password endpoint
-            const response = await fetch('http://157.245.242.118:3001/auth/reset', {
+            const response = await fetch('https://nc-api.matthewe.me/auth/reset', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(passwordResetData),

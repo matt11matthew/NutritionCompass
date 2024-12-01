@@ -31,7 +31,7 @@ interface LoginProps {
         console.log(password);
 
         try {
-            const response =  await fetch('http://157.245.242.118:3001/auth/login', {
+            const response =  await fetch('https://nc-api.matthewe.me/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

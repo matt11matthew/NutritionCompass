@@ -26,7 +26,7 @@ function UserProfile() {
             }
             console.log('Fetching user data for userId:', userId);
             try {
-                const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
+                const response = await fetch(`https://nc-api.matthewe.me/users/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ function UserProfile() {
         console.log(profileData);
 
         try {
-            const response = await fetch(`http://157.245.242.118:3001/users/${userId}`, {
+            const response = await fetch(`https://nc-api.matthewe.me/users/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

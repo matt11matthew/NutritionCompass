@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./UserDashboard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 function UserDashboard() {
     const [meals, setMeals] = useState<
@@ -19,15 +21,35 @@ function UserDashboard() {
     const [totals, setTotals] = useState({ calories: 0, carbs: 0, protein: 0, fats: 0 });
     const userId = localStorage.getItem("userId") || "";
     const [activeMealIndex, setActiveMealIndex] = useState<number | null>(null);
+    const [maxCalories, setMaxCalories] = useState(2000);
+
 
     useEffect(() => {
-        if (userId) fetchMeals();
+        if (userId) {
+            fetchMeals();
+            //i think we get max cals on load:
+            getMaxCals(userId);
+        }
     }, [userId]);
+
+    //get max calories of the user:
+    const getMaxCals = async (userId: string) => {
+        try{
+            // should it be 'https://nc-api.matthewe.me/users/${userId}/calories`
+            const response = await fetch('https://nc-api.matthewe.me/users/${userId}/caloriesLimits')
+            if (!response.ok) throw new Error("Error with max cals");
+            const data = await response.json();
+            console.log(data);
+            setMaxCalories(data.calories)
+        }catch (error){
+            console.log(error);
+        }
+    }
 
     // Fetch all meals associated with a user
     const fetchMeals = async () => {
         try {
-            const response = await fetch(`http://157.245.242.118:3001/foods/${userId}`);
+            const response = await fetch(`https://nc-api.matthewe.me/foods/${userId}`);
             if (!response.ok) throw new Error("Failed to fetch meals");
             const data = await response.json();
 
@@ -89,7 +111,7 @@ function UserDashboard() {
         };
 
         try {
-            const response = await fetch(`http://157.245.242.118:3001/foods`, {
+            const response = await fetch(`https://nc-api.matthewe.me/foods`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(mealData), // Send the correct payload
@@ -143,7 +165,7 @@ function UserDashboard() {
         const updatedMeal = { ...mealToUpdate, ...newMeal };
 
         try {
-            const response = await fetch(`http://157.245.242.118:3001/foods/${userId}/${updatedMeal._id}`, {
+            const response = await fetch(`https://nc-api.matthewe.me/foods/${userId}/${updatedMeal._id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -175,9 +197,10 @@ function UserDashboard() {
     // Delete a meal
     const deleteMeal = async (index: number) => {
         const mealToDelete = meals[index];
+        console.log("meal index del:", index, mealToDelete);
 
         try {
-            const response = await fetch(`http://157.245.242.118:3001/foods/${userId}/${mealToDelete._id}`, {
+            const response = await fetch(`https://nc-api.matthewe.me/foods/${userId}/${mealToDelete._id}`, {
                 method: "DELETE",
             });
 
@@ -200,6 +223,7 @@ function UserDashboard() {
     };
 
     const showMealOptions = (index: number) => {
+        console.log("Showing options for meal at index:", index);
         setActiveMealIndex(activeMealIndex === index ? null : index);
     };
 
@@ -211,12 +235,42 @@ function UserDashboard() {
                     <h1 className="dashboard-title">User Dashboard</h1>
                     <div id="macros-content">
                         <div className="macros-circle">
-                            <h2>Macros</h2>
+                            <h2>Calories</h2>
+                            <div style={{width: 250, height: 250}}>
+                                <CircularProgressbar
+                                    value={totals.calories}
+                                    maxValue={maxCalories}
+                                    text={`${totals.calories}/${maxCalories}\nCalories`}
+                                    styles={{
+                                        path: {
+                                            stroke: '#0F3874',
+                                            strokeLinecap: 'round',
+                                            transition: 'stroke-dashoffset 0.5s ease 0s',
+                                        },
+                                        trail: {
+                                            stroke: '#d6d6d6',
+                                        },
+                                        text: {
+                                            fill: '#0F3874',
+                                            fontSize: '14px',
+                                            fontWeight: 'bold',
+                                            lineHeight: '18px',
+                                            textAlign: 'center',
+                                        }
+                                    }}
+                                />
+                            </div>
+                            {/*<h2>Macros</h2>*/}
+                            {/*<p>Carbs: {totals.carbs} grams</p>*/}
+                            {/*<p>Protein: {totals.protein} grams</p>*/}
+                            {/*<p>Fats: {totals.fats} grams</p>*/}
+                        </div>
+                        <div className="macros-summary">
                             <p>Carbs: {totals.carbs} grams</p>
                             <p>Protein: {totals.protein} grams</p>
                             <p>Fats: {totals.fats} grams</p>
                         </div>
-                        <div className="calories-summary">Calories: {totals.calories} cal</div>
+                        {/*<div className="calories-summary">Calories: {totals.calories} cal</div>*/}
                     </div>
                 </div>
 
@@ -236,13 +290,13 @@ function UserDashboard() {
                                 type="text"
                                 placeholder="Meal name"
                                 value={newMeal.name}
-                                onChange={(e) => setNewMeal({ ...newMeal, name: e.target.value })}
+                                onChange={(e) => setNewMeal({...newMeal, name: e.target.value})}
                                 className="meal-input"
                             />
-                            <input
-                                type="number"
-                                placeholder="Calories"
-                                value={newMeal.calories}
+                                <input
+                                    type="number"
+                                    placeholder="Calories"
+                                    value={newMeal.calories}
                                 onChange={(e) => setNewMeal({ ...newMeal, calories: parseInt(e.target.value) || 0 })}
                                 className="meal-input"
                             />
@@ -253,7 +307,7 @@ function UserDashboard() {
                                 type="number"
                                 placeholder="Carbs (g)"
                                 value={newMeal.carbs}
-                                onChange={(e) => setNewMeal({ ...newMeal, carbs: parseInt(e.target.value) || 0 })}
+                                onChange={(e) => setNewMeal({...newMeal, carbs: parseInt(e.target.value) || 0})}
                                 className="meal-input"
                             />
                             <input

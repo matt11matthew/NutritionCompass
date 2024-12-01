@@ -49,21 +49,21 @@
     height: 75%;
 }
 
-.macros-circle {
-    width: 250px; /* Increase the circle's overall size */
-    height: 250px; /* Keep it a perfect circle */
-    border: 12px solid #0F3874; /* Make the outline thicker */
-    border-radius: 50%; /* Ensures the shape remains circular */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 1rem;
-    color: #0F3874;
-    margin-bottom: 20px; /* Add spacing below the circle */
-    position: relative;
-}
+/*.macros-circle {*/
+/*    width: 250px; !* Increase the circle's overall size *!*/
+/*    height: 250px; !* Keep it a perfect circle *!*/
+/*    border: 12px solid #0F3874; !* Make the outline thicker *!*/
+/*    border-radius: 50%; !* Ensures the shape remains circular *!*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    text-align: center;*/
+/*    font-size: 1.2rem;*/
+/*    color: #0F3874;*/
+/*    margin-bottom: 20px; !* Add spacing below the circle *!*/
+/*    position: relative;*/
+/*}*/
 
 .macros-circle h2 {
     margin: 0;
@@ -84,7 +84,7 @@
     font-size: 1.2rem;
     font-weight: bold;
     color: #0F3874;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 /* Meals Section */
