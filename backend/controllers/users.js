@@ -231,14 +231,24 @@ const getCaloriesConsumed = async (req, res, next) => { // calculates and return
 //helper function below for BMR and kcal lims
 const calculateBMR = (user) => {
   const {weight, inches, feet, age, activityLevel, sex} = user;
+
+  console.log("Calculating BMR for user:");
+  console.log(`Weight: ${weight}, Feet: ${feet}, Inches: ${inches} Age: ${age}, Sex: ${sex}, Activity Level: ${activityLevel}`);
+
+  if (!weight || !feet || !inches || !age || !sex || !activityLevel) {
+    throw new Error("Missing required user details for BMR calculation");
+  }
+
   let bmr;
-  if (sex === "MALE"){
+  if (sex === "FEMALE"){
     bmr = 9.6 * weight + 1.8 * (inches + (feet*12)) - 4.7 * age + 655;
-  } else if (sex === "FEMALE") {
-    bmr = 13.7 * weight * 5 * (inches + (feet*12)) - 6.8 * age + 66;
+  } else if (sex === "MALE") {
+    bmr = 13.7 * weight + 5 * (inches + (feet*12)) - 6.8 * age + 66;
   } else {
     throw new Error("Gender not in database.");
   }
+  console.log(`Calculated BMR before activity level multiplier: ${bmr}`);
+
 
   const multiplier = ACTIVITY_LEVELS[activityLevel.toUpperCase()] || 1.2;
   const calorieLimit = bmr * multiplier;
