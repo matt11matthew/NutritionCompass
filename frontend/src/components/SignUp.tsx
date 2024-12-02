@@ -37,7 +37,8 @@ function SignUp() {
         if(!email || !emailRegex.test(email)) {
             setEmailError("Invalid Email");
             valid = false
-        }else{
+        }
+        else{
             setEmailError('');
         }
 
@@ -45,7 +46,12 @@ function SignUp() {
         if(password != confirmPassword){
             setConfirmPasswordError("Passwords do not match");
             valid = false;
-        }else{
+        }
+        else if(password.length < 8) {
+            setConfirmPasswordError("Password must be at least 8 characters");
+            valid = false;
+        }
+        else{
             setConfirmPasswordError('');
         }
 
