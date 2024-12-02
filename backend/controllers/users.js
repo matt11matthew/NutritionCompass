@@ -235,9 +235,17 @@ const calculateBMR = (user) => {
   console.log("Calculating BMR for user:");
   console.log(`Weight: ${weight}, Feet: ${feet}, Inches: ${inches} Age: ${age}, Sex: ${sex}, Activity Level: ${activityLevel}`);
 
-  if (!weight || !feet || !inches || !age || !sex || !activityLevel) {
+  if (
+      weight == null || // Explicitly check for null or undefined
+      feet == null ||
+      inches == null ||
+      age == null ||
+      !sex ||
+      !activityLevel
+  ) {
     throw new Error("Missing required user details for BMR calculation");
   }
+
 
   let bmr;
   if (sex === "FEMALE"){
