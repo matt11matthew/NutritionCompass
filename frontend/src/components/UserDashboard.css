@@ -80,7 +80,7 @@
     color: #0F3874;
 }
 
-.calories-summary {
+.macros-summary {
     font-size: 1.2rem;
     font-weight: bold;
     color: #0F3874;
@@ -180,7 +180,7 @@ input[type="number"]{
     padding: 10px;
     margin-bottom: 15px;
     box-shadow: 3px 5px 4px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
 }
 
 .meal-item:hover {
@@ -192,6 +192,14 @@ input[type="number"]{
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+.meal-form input{
+    transition: all 0.3s ease;
+}
+
+.meal-form input:hover {
+    box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.4);
 }
 
 .meal-name {
