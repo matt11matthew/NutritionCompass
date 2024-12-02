@@ -42,7 +42,6 @@ function SignUp() {
             await fetch('https://nc-api.matthewe.me/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password: "dummyPassword" }),
             }).then(res => res.status === 400)
         ) {
             setEmailError("This email already exists. Please try a different email.");
