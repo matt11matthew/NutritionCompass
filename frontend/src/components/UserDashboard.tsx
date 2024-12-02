@@ -3,6 +3,7 @@ import "./UserDashboard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function UserDashboard() {
     const [meals, setMeals] = useState<
@@ -347,7 +348,9 @@ function UserDashboard() {
                         {meals.map((meal, index) => (
                             <li key={index} className="meal-item">
                                 <div className="meal-info">
-                                    <button onClick={() => showMealOptions(index)}>Show Options</button>
+                                    <button className="icon-button" onClick={() => showMealOptions(index)}>
+                                        <i className="bi bi-three-dots-vertical" style={{fontSize: '1.5rem', color: '#0F3874'}}></i>
+                                    </button>
                                     <span className="meal-name">{meal.name}</span>
                                     <span className="meal-calories">{meal.calories} cal</span>
                                 </div>
@@ -360,11 +363,11 @@ function UserDashboard() {
 
                                     <div className="meal-options">
                                         <span className="dots-menu" onClick={() => editMeal(index)}>
-                                        Edit
-                                    </span>
+                                            <i className="bi bi-pencil-square" style={{fontSize: '1.5rem'}}></i>
+                                        </span>
                                         <span className="dots-menu" onClick={() => deleteMeal(index)}>
-                                        Delete
-                                    </span>
+                                            <i className="bi bi-trash3-fill" style={{fontSize: '1.5rem'}}></i>
+                                        </span>
                                     </div>
                                 </div>
                             </li>

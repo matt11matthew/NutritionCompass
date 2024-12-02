@@ -116,6 +116,11 @@ input[type="number"]{
     -moz-appearance: none;
 }
 
+.icon-button {
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+}
+
 .add-meal-button {
     background-color: #E2D5C4;
     color: #0F3874;
@@ -173,8 +178,13 @@ input[type="number"]{
     background-color: #E2D5C4;
     border-radius: 5px;
     padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    box-shadow: 3px 5px 4px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s;
+}
+
+.meal-item:hover {
+    transform: scale(1.01);
 }
 
 .meal-info {
@@ -185,13 +195,13 @@ input[type="number"]{
 }
 
 .meal-name {
-    font-size: 1rem;
+    font-size: 1.4rem;
     font-weight: bold;
     color: #0F3874;
 }
 
 .meal-calories {
-    font-size: 1rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: #0F3874;
 }
@@ -222,8 +232,10 @@ input[type="number"]{
     justify-content: space-between;
 }
 
-.meal-macro-item{
+.meal-macros-item{
     padding: 2px;
+    color: #0F3874;
+    font-size: 1.2rem;
 }
 
 .dots-menu {

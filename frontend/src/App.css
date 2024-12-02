@@ -97,3 +97,10 @@ html, body {
   box-sizing: border-box;
 }
 
+input {
+  background-color: #D9D9D9;
+}
+
+select {
+  background-color: #D9D9D9;
+}
