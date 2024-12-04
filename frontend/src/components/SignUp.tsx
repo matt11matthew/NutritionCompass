@@ -38,15 +38,15 @@ function SignUp() {
             setEmailError("Invalid Email");
             valid = false
         }
-        else if (
-            await fetch('https://nc-api.matthewe.me/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-            }).then(res => res.status === 400)
-        ) {
-            setEmailError("This email already exists. Please try a different email.");
-            valid = false;
-        }
+        // else if (
+        //     await fetch('https://nc-api.matthewe.me/auth/register', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //     }).then(res => res.status === 400)
+        // ) {
+        //     setEmailError("This email already exists. Please try a different email.");
+        //     valid = false;
+        // }
         else{
             setEmailError('');
         }
@@ -86,7 +86,12 @@ function SignUp() {
                     }
                     else {
                         const errorJson = await data.json();
-                        setSignUpResult(errorJson.message || 'Failed to create account.');
+                        if (errorJson.message === 'User already exists.') {
+                            setEmailError('Email already exists. Please use a different email.');
+                        }
+                        else {
+                            setSignUpResult(errorJson.message || 'Failed to create account.');
+                        }
                     }
                 });
 
