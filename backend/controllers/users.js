@@ -230,13 +230,12 @@ const getCaloriesConsumed = async (req, res, next) => { // calculates and return
 
 //helper function below for BMR and kcal lims
 const calculateBMR = (user) => {
-  const {weight, inches, feet, age, activityLevel, sex} = user;
+  const { weight, feet, inches, age, activityLevel, sex, weightGoal } = user;
 
-  console.log("Calculating BMR for user:");
-  console.log(`Weight: ${weight}, Feet: ${feet}, Inches: ${inches} Age: ${age}, Sex: ${sex}, Activity Level: ${activityLevel}`);
+  console.log("User details for BMR calculation:", { weight, feet, inches, age, activityLevel, sex, weightGoal });
 
   if (
-      weight == null || // Explicitly check for null or undefined
+      weight == null ||
       feet == null ||
       inches == null ||
       age == null ||
@@ -246,23 +245,45 @@ const calculateBMR = (user) => {
     throw new Error("Missing required user details for BMR calculation");
   }
 
+  // Convert weight to kilograms (if input is in pounds)
+  const weightInKg = weight * 0.453592;
 
+  // Convert height to centimeters
+  const heightInCm = (feet * 30.48) + (inches * 2.54);
+
+  // Adjusted BMR calculation
   let bmr;
-  if (sex === "FEMALE"){
-    bmr = 9.6 * weight + 1.8 * (inches + (feet*12)) - 4.7 * age + 655;
+  if (sex === "FEMALE") {
+    bmr = 9.6 * weightInKg + 1.8 * heightInCm - 4.7 * age + 655; // Adjusted baseline constant
   } else if (sex === "MALE") {
-    bmr = 13.7 * weight + 5 * (inches + (feet*12)) - 6.8 * age + 66;
+    bmr = 13.7 * weightInKg + 5 * heightInCm - 6.8 * age + 66; // Adjusted baseline constant
   } else {
-    throw new Error("Gender not in database.");
+    throw new Error("Invalid sex value. Must be 'MALE' or 'FEMALE'.");
   }
-  console.log(`Calculated BMR before activity level multiplier: ${bmr}`);
 
+  console.log(`Calculated BMR before activity multiplier: ${bmr}`);
 
+  // Apply activity level multiplier
+  const ACTIVITY_LEVELS = { LOW: 1.2, MEDIUM: 1.55, HIGH: 1.725 };
   const multiplier = ACTIVITY_LEVELS[activityLevel.toUpperCase()] || 1.2;
-  const calorieLimit = bmr * multiplier;
+  let calorieLimit = bmr * multiplier;
 
-  return {bmr, calorieLimit};
+  console.log(`Calorie limit after applying activity multiplier: ${calorieLimit}`);
+
+  // Adjust for weight goals
+  const weightGoalInKg = weightGoal * 0.453592;
+  const weightDifference = weightInKg - weightGoalInKg;
+  if (weightDifference > 0) {
+    calorieLimit -= 500; // Weight loss: Subtract 500 calories
+  } else if (weightDifference < 0) {
+    calorieLimit += 500; // Weight gain: Add 500 calories
+  }
+
+  console.log(`Final calorie limit after goal adjustment: ${calorieLimit}`);
+
+  return { bmr, calorieLimit };
 };
+
 
 module.exports = {
   getUsers,
